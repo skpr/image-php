@@ -1,5 +1,9 @@
+ARG ALPINE_VERSION=3.14
+FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
+
 FROM skpr/base:1.x
 
+ARG ARCH=amd64
 ARG PHP_VERSION=7.2
 
 ENV NEW_RELIC_ENABLED=false
@@ -9,8 +13,6 @@ ENV NEW_RELIC_ENABLED=false
 ENV PHP_MEMORY_LIMIT=128M
 
 ENV PHP_LOG_LIMIT=4096
-
-ENV SYSLOG_SYMLINK=/mnt/syslog/log
 
 ENV PATH "$PATH:/data/bin"
 
@@ -87,12 +89,11 @@ RUN if [[ "$PHP_VERSION" != "8.1" ]]; then \
     rm -f /etc/php/conf.d/newrelic.ini; \
 fi
 
-RUN curl -sSL https://github.com/skpr/mail/releases/download/v0.0.6/skprmail_linux_amd64 -o /usr/local/bin/skprmail && \
+RUN curl -sSL https://github.com/skpr/mail/releases/download/v0.0.9/skprmail_linux_${ARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
 
 # Built using an updated build approach in this fork: https://github.com/skpr/docconv
-RUN curl -sSL https://s3.amazonaws.com/pnx-bins/docconv-${ALPINE_VERSION} -o /usr/local/bin/docconv && \
-    chmod +rx /usr/local/bin/docconv
+COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
 
 ADD conf.d/01_apcu.ini /etc/php/conf.d/01_apcu.ini
 ADD conf.d/50_overrides.ini /etc/php/conf.d/50_overrides.ini
