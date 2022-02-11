@@ -1,0 +1,92 @@
+version: 2.1
+
+executors:
+  amd64:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: medium
+
+  arm64:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+
+platforms: &platforms
+  - amd64
+  - arm64
+
+workflows:
+  build:
+    jobs:
+      - build:
+          image: php
+          matrix:
+            parameters:
+              executor: *platforms
+              version:
+                - "7.4"
+                - "8.0"
+                - "8.1"
+
+  nightly:
+    jobs:
+      - build:
+          name: php
+          image: php
+          matrix:
+            parameters:
+              executor: *platforms
+              version:
+                - "7.4"
+                - "8.0"
+                - "8.1"
+
+    triggers:
+      - schedule:
+          # Scheduled build for 2am AEST nightly.
+          cron: "0 15 * * *"
+          filters:
+            branches:
+              only:
+                - master
+
+jobs:
+  build:
+    parameters:
+      executor:
+        type: string
+      image:
+        type: string
+      version:
+        type: string
+        default: ""
+    machine: true
+    executor: << parameters.executor >>
+    steps:
+      - checkout
+      - run:
+          name: "Install: Container Structure Tests"
+          command: |
+            curl -LO https://storage.googleapis.com/container-structure-test/v1.11.0/container-structure-test-linux-<< parameters.executor >> && \
+            mv container-structure-test-linux-<< parameters.executor >> container-structure-test && \
+            chmod +x container-structure-test && \
+            sudo mv container-structure-test /usr/local/bin/
+      - run:
+          name: "Build: Base Image"
+          command: |
+            cd base
+            make build
+      - run:
+          name: Build, Test and Release
+          command: |
+            cd << parameters.image >>
+            make build REGISTRY=skpr/php-<< parameters.executor >> ARCH=<< parameters.executor >> VERSION=<< parameters.version >>
+      - when:
+          condition:
+            equal: ["main", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                name: "Push image"
+                command: |
+                  docker login -u $DOCKER_USER -p $DOCKER_PASS
+                  make push REGISTRY=skpr/php-<< parameters.executor >> VERSION=<< parameters.version >>
