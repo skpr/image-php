@@ -72,11 +72,6 @@ jobs:
             chmod +x container-structure-test && \
             sudo mv container-structure-test /usr/local/bin/
       - run:
-          name: "Build: Base Image"
-          command: |
-            cd base
-            make build
-      - run:
           name: Build, Test and Release
           command: |
             cd << parameters.image >>
