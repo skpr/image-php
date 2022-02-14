@@ -3,7 +3,7 @@
 REGISTRY=docker.io/skpr/php
 ARCH=amd64
 
-COMMON_BUILD_ARGS=--build-arg=ARCH={ARCH} --build-arg PHP_VERSION=${VERSION}
+COMMON_BUILD_ARGS=--build-arg=ARCH=${ARCH} --build-arg PHP_VERSION=${VERSION}
 
 IMAGE_BASE=${REGISTRY}:${VERSION}-1.x
 IMAGE_FPM=${REGISTRY}-fpm:${VERSION}-1.x

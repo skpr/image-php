@@ -1,6 +1,9 @@
 ARG IMAGE=skpr/php:8.0-1.x
 ARG ALPINE_VERSION=3.14
+ARG ARCH=amd64
+
 FROM alpine:${ALPINE_VERSION} as redis-cli
+
 RUN apk add redis
 
 FROM ${IMAGE}
