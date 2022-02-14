@@ -1,20 +1,23 @@
 ARG ALPINE_VERSION=3.14
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
-
-FROM skpr/base:1.x
+FROM alpine:${ALPINE_VERSION}
 
 ARG ARCH=amd64
-ARG PHP_VERSION=7.2
+ARG ALPINE_VERSION=3.14
+ARG PHP_VERSION=8.0
 
+
+ENV ALPINE_VERSION=${ALPINE_VERSION}
 ENV NEW_RELIC_ENABLED=false
 # ENV NEW_RELIC_APP_NAME=My Application
 # ENV NEW_RELIC_LICENSE_KEY=xxxxxxxxxxxxxxxxx
-
 ENV PHP_MEMORY_LIMIT=128M
-
 ENV PHP_LOG_LIMIT=4096
-
 ENV PATH "$PATH:/data/bin"
+
+
+RUN apk add util-linux ca-certificates
+RUN adduser -D -u 1000 skpr
 
 # https://github.com/moby/moby/issues/20295
 RUN mkdir /data && \
