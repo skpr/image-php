@@ -1,7 +1,7 @@
-ARG IMAGE=skpr/php:7.2-1.x
+ARG IMAGE=skpr/php:8.0-1.x
 FROM ${IMAGE}
 
-ARG PHP_VERSION=7.2
+ARG PHP_VERSION=8.0
 
 USER root
 RUN apk add php${PHP_VERSION}-xdebug

@@ -1,4 +1,4 @@
-ARG IMAGE=skpr/php:7.2-1.x
+ARG IMAGE=skpr/php:8.0-1.x
 FROM ${IMAGE}
 
 ARG ARCH=amd64

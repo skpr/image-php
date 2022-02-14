@@ -1,12 +1,12 @@
-ARG IMAGE=skpr/php:7.2-1.x
+ARG IMAGE=skpr/php:8.0-1.x
 
-FROM skpr/base:1.x as redis-cli
+FROM alpine:${ALPINE_VERSION} as redis-cli
 RUN apk add redis
 
 FROM ${IMAGE}
 
 ARG ARCH=amd64
-ARG PHP_VERSION=7.2
+ARG PHP_VERSION=8.0
 
 ENV PHP_MEMORY_LIMIT=256M
 
