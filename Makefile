@@ -22,45 +22,45 @@ ALL_IMAGES=${IMAGE_BASE} ${IMAGE_FPM} ${IMAGE_CLI} ${IMAGE_FPM_DEV} ${IMAGE_CLI_
 
 build: validate
 	# Building production images.
-	docker build --no-cache ${COMMON_BUILD_ARGS} -t ${IMAGE_BASE} base
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_BASE} -t ${IMAGE_FPM} fpm
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_BASE} -t ${IMAGE_CLI} cli
+	docker build --no-cache ${COMMON_BUILD_ARGS} -t ${IMAGE_BASE}-${ARCH} base
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_BASE} -t ${IMAGE_FPM}-${ARCH} fpm
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_BASE} -t ${IMAGE_CLI}-${ARCH} cli
 
 	# Testing production images.
-	container-structure-test test --image ${IMAGE_BASE} --config base/tests.yml
-	container-structure-test test --image ${IMAGE_FPM} --config fpm/tests.yml
-	container-structure-test test --image ${IMAGE_CLI} --config cli/tests.yml
+	container-structure-test test --image ${IMAGE_BASE}-${ARCH} --config base/tests.yml
+	container-structure-test test --image ${IMAGE_FPM}-${ARCH} --config fpm/tests.yml
+	container-structure-test test --image ${IMAGE_CLI}-${ARCH} --config cli/tests.yml
 
 	# Building dev images.
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_FPM} -t ${IMAGE_FPM}-dev dev
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI} -t ${IMAGE_CLI}-dev dev
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_FPM} -t ${IMAGE_FPM}-dev-${ARCH} dev
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI} -t ${IMAGE_CLI}-dev-${ARCH} dev
 
 	# Building Xdebug images.
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_FPM_DEV} -t ${IMAGE_FPM_XDEBUG} xdebug
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI_DEV} -t ${IMAGE_CLI_XDEBUG} xdebug
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_FPM_DEV} -t ${IMAGE_FPM_XDEBUG}-${ARCH} xdebug
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI_DEV} -t ${IMAGE_CLI_XDEBUG}-${ARCH} xdebug
 
 	# Building CircleCI images.
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI} --build-arg NODE_VERSION=10 -t ${IMAGE_CIRCLECI_V1} circleci
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${ARCH} --build-arg NODE_VERSION=10 -t ${IMAGE_CIRCLECI_V1}-${ARCH} circleci
 	# 1.x version is Node 10, 2.x is Node 14.
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI} --build-arg NODE_VERSION=14 -t ${IMAGE_CIRCLECI_V2} circleci
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${ARCH} --build-arg NODE_VERSION=14 -t ${IMAGE_CIRCLECI_V2}-${ARCH} circleci
 
 push: validate
 	# Pushing production images
-	docker push ${IMAGE_BASE}
-	docker push ${IMAGE_FPM}
-	docker push ${IMAGE_CLI}
+	docker push ${IMAGE_BASE}-${ARCH}
+	docker push ${IMAGE_FPM}-${ARCH}
+	docker push ${IMAGE_CLI}-${ARCH}
 
 	# Pushing dev images.
-	docker push ${IMAGE_FPM_DEV}
-	docker push ${IMAGE_CLI_DEV}
+	docker push ${IMAGE_FPM_DEV}-${ARCH}
+	docker push ${IMAGE_CLI_DEV}-${ARCH}
 
 	# Pushing Xdebug images.
-	docker push ${IMAGE_FPM_XDEBUG}
-	docker push ${IMAGE_CLI_XDEBUG}
+	docker push ${IMAGE_FPM_XDEBUG}-${ARCH}
+	docker push ${IMAGE_CLI_XDEBUG}-${ARCH}
 
 	# Pushing CircleCI images.
-	docker push ${IMAGE_CIRCLECI_V1}
-	docker push ${IMAGE_CIRCLECI_V2}
+	docker push ${IMAGE_CIRCLECI_V1}-${ARCH}
+	docker push ${IMAGE_CIRCLECI_V2}-${ARCH}
 
 manifest:
 	for IMAGE in ${ALL_IMAGES}; do \
