@@ -15,6 +15,11 @@ platforms: &platforms
   - amd64
   - arm64
 
+php_versions: &php_versions
+  - "7.4"
+  - "8.0"
+  - "8.1"
+
 workflows:
   build:
     jobs:
@@ -23,10 +28,16 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              version:
-                - "7.4"
-                - "8.0"
-                - "8.1"
+              version: *php_versions
+      - manifest:
+          matrix:
+            parameters:
+              version: *php_versions
+          requires: [ build ]
+          filters:
+            branches:
+              only:
+                - main
 
   nightly:
     jobs:
@@ -36,10 +47,7 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              version:
-                - "7.4"
-                - "8.0"
-                - "8.1"
+              version: *php_versions
 
     triggers:
       - schedule:
@@ -48,7 +56,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
 
 jobs:
   build:
@@ -84,3 +92,21 @@ jobs:
                 command: |
                   docker login -u $DOCKER_USER -p $DOCKER_PASS
                   make push REGISTRY=skpr/php-<< parameters.executor >> VERSION=<< parameters.version >>
+
+  manifest:
+    parameters:
+      version:
+        type: string
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.7
+      - run:
+          name: Push Manifest
+          command: |
+            export DOCKER_CLI_EXPERIMENTAL=enabled
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            make manifest VERSION=<< parameters.version >>
