@@ -28,8 +28,8 @@ workflows:
           image: php
           matrix:
             parameters:
-              executor: *platforms
               php_version: *php_versions
+              executor: *platforms
       - manifest:
           context: docker-publishing
           matrix:
@@ -49,8 +49,8 @@ workflows:
           image: php
           matrix:
             parameters:
-              executor: *platforms
               php_version: *php_versions
+              executor: *platforms
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
@@ -63,13 +63,13 @@ workflows:
 jobs:
   build:
     parameters:
+      php_version:
+        type: string
+        default: ""
       executor:
         type: string
       image:
         type: string
-      php_version:
-        type: string
-        default: ""
     machine: true
     executor: << parameters.executor >>
     steps:
