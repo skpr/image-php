@@ -111,5 +111,5 @@ jobs:
               docker manifest create ${IMAGE}:<< parameters.php_version >>-v2-latest \
               --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-arm64 \
               --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-amd64; \
-              docker manifest push ${IMAGE}-<< parameters.php_version >>; \
+              docker manifest push ${IMAGE}:<< parameters.php_version >>-v2-latest; \
             done
