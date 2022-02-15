@@ -44,21 +44,21 @@ build: validate
 
 push: validate
 	# Pushing production images
-	docker push ${IMAGE_BASE}-${ARCH}
-	docker push ${IMAGE_FPM}-${ARCH}
-	docker push ${IMAGE_CLI}-${ARCH}
+	docker push ${IMAGE_BASE}-${VERSION_TAG}-${ARCH}
+	docker push ${IMAGE_FPM}-${VERSION_TAG}-${ARCH}
+	docker push ${IMAGE_CLI}-${VERSION_TAG}-${ARCH}
 
 	# Pushing dev images.
-	docker push ${IMAGE_FPM_DEV}-${ARCH}
-	docker push ${IMAGE_CLI_DEV}-${ARCH}
+	docker push ${IMAGE_FPM_DEV}-${VERSION_TAG}-${ARCH}
+	docker push ${IMAGE_CLI_DEV}-${VERSION_TAG}-${ARCH}
 
 	# Pushing Xdebug images.
-	docker push ${IMAGE_FPM_XDEBUG}-${ARCH}
-	docker push ${IMAGE_CLI_XDEBUG}-${ARCH}
+	docker push ${IMAGE_FPM_XDEBUG}-${VERSION_TAG}-${ARCH}
+	docker push ${IMAGE_CLI_XDEBUG}-${VERSION_TAG}-${ARCH}
 
 	# Pushing CircleCI images.
-	docker push ${IMAGE_CIRCLECI_V1}-${ARCH}
-	docker push ${IMAGE_CIRCLECI_V2}-${ARCH}
+	docker push ${IMAGE_CIRCLECI_V1}-${VERSION_TAG}-${ARCH}
+	docker push ${IMAGE_CIRCLECI_V2}-${VERSION_TAG}-${ARCH}
 
 manifest:
 	for IMAGE in ${ALL_IMAGES}; do \
