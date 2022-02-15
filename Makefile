@@ -57,8 +57,7 @@ push: validate
 	docker push ${IMAGE_CLI_XDEBUG}-${VERSION_TAG}-${ARCH}
 
 	# Pushing CircleCI images.
-	docker push ${IMAGE_CIRCLECI_V1}-${VERSION_TAG}-${ARCH}
-	docker push ${IMAGE_CIRCLECI_V2}-${VERSION_TAG}-${ARCH}
+	docker push ${IMAGE_CIRCLECI}-${VERSION_TAG}-${ARCH}
 
 manifest:
 	for IMAGE in ${ALL_IMAGES}; do \
