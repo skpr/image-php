@@ -24,12 +24,14 @@ workflows:
   build:
     jobs:
       - build:
+          context: docker-publishing
           image: php
           matrix:
             parameters:
               executor: *platforms
               php_version: *php_versions
       - manifest:
+          context: docker-publishing
           matrix:
             parameters:
               php_version: *php_versions
@@ -42,13 +44,13 @@ workflows:
   nightly:
     jobs:
       - build:
+          context: docker-publishing
           name: php
           image: php
           matrix:
             parameters:
               executor: *platforms
               php_version: *php_versions
-
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
@@ -90,7 +92,7 @@ jobs:
             - run:
                 name: "Push image"
                 command: |
-                  docker login -u $DOCKER_USER -p $DOCKER_PASS
+                  echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                   make push REGISTRY=skpr/php-<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
 
   manifest:
@@ -108,5 +110,5 @@ jobs:
           name: Push Manifest
           command: |
             export DOCKER_CLI_EXPERIMENTAL=enabled
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             make manifest PHP_VERSION=<< parameters.php_version >>
