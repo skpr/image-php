@@ -87,7 +87,7 @@ jobs:
             make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
             if [ "$CIRCLE_BRANCH" == "main" ]; then
               echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-              make push REGISTRY=skpr/php PHP_VERSION=<< parameters.php_version >>
+              make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
             fi
 
   manifest:
