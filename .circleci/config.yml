@@ -108,8 +108,8 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             ALL_IMAGES="skpr/php skpr/php-fpm skpr/php-fpm-dev skpr/php-fpm-xdebug skpr/php-cli skpr/php-cli-dev skpr/php-cli-xdebug skpr/php-circleci"
             for IMAGE in ${ALL_IMAGES}; do \
-              docker manifest create ${IMAGE}-<< parameters.php_version >> \
-              --amend ${IMAGE}-<< parameters.php_version >>-arm64 \
-              --amend ${IMAGE}-<< parameters.php_version >>-amd64; \
+              docker manifest create ${IMAGE}:<< parameters.php_version >>-v2-latest \
+              --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-arm64 \
+              --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-amd64; \
               docker manifest push ${IMAGE}-<< parameters.php_version >>; \
             done
