@@ -16,7 +16,6 @@ platforms: &platforms
   - arm64
 
 php_versions: &php_versions
-  - "7.4"
   - "8.0"
   - "8.1"
 
@@ -106,10 +105,14 @@ jobs:
           command: |
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            ALL_IMAGES="skpr/php skpr/php-fpm skpr/php-fpm-dev skpr/php-fpm-xdebug skpr/php-cli skpr/php-cli-dev skpr/php-cli-xdebug skpr/php-circleci"
+            ALL_IMAGES="skpr/php skpr/php-fpm skpr/php-cli"
             for IMAGE in ${ALL_IMAGES}; do \
               docker manifest create ${IMAGE}:<< parameters.php_version >>-v2-latest \
-              --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-arm64 \
-              --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-amd64; \
-              docker manifest push ${IMAGE}:<< parameters.php_version >>-v2-latest; \
+                --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-arm64 \
+                --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-amd64;
+              docker manifest create ${IMAGE}:<< parameters.php_version >>-xdebug-v2-latest \
+                --amend ${IMAGE}:<< parameters.php_version >>-xdebug-v2-latest-arm64 \
+                --amend ${IMAGE}:<< parameters.php_version >>-xdebug-v2-latest-amd64;
+              docker manifest push ${IMAGE}:<< parameters.php_version >>-v2-latest;
+              docker manifest push ${IMAGE}:<< parameters.php_version >>-xdebug-v2-latest;
             done
