@@ -85,15 +85,10 @@ jobs:
           name: Build, Test and Release
           command: |
             make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
-      - when:
-          condition:
-            equal: ["main", << pipeline.git.branch >> ]
-          steps:
-            - run:
-                name: "Push image"
-                command: |
-                  echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                  make push REGISTRY=skpr/php PHP_VERSION=<< parameters.php_version >>
+            if [ "$CIRCLE_BRANCH" == "main" ]; then
+              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              make push REGISTRY=skpr/php PHP_VERSION=<< parameters.php_version >>
+            fi
 
   manifest:
     parameters:
