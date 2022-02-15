@@ -28,11 +28,11 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              version: *php_versions
+              php_version: *php_versions
       - manifest:
           matrix:
             parameters:
-              version: *php_versions
+              php_version: *php_versions
           requires: [ build ]
           filters:
             branches:
@@ -47,7 +47,7 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              version: *php_versions
+              php_version: *php_versions
 
     triggers:
       - schedule:
@@ -95,7 +95,7 @@ jobs:
                   GIT_VERSION=$(git describe --tags --always)
                   echo ${GIT_VERSION}
                   docker login -u $DOCKER_USER -p $DOCKER_PASS
-                  make push REGISTRY=skpr/php-<< parameters.executor >> PHP_VERSION=<< parameters.version >> GIT_VERSION=${GIT_VERSION}
+                  make push REGISTRY=skpr/php-<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> GIT_VERSION=${GIT_VERSION}
 
   manifest:
     parameters:
