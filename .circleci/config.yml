@@ -93,7 +93,7 @@ jobs:
                 name: "Push image"
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                  make push REGISTRY=skpr/php-<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
+                  make push REGISTRY=skpr/php PHP_VERSION=<< parameters.php_version >>
 
   manifest:
     parameters:
