@@ -84,7 +84,7 @@ jobs:
           command: |
             GIT_VERSION=$(git describe --tags --always)
             echo ${GIT_VERSION}
-            make build REGISTRY=skpr/php-<< parameters.executor >> ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> GIT_VERSION=${GIT_VERSION}
+            make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> GIT_VERSION=${GIT_VERSION}
       - when:
           condition:
             equal: ["main", << pipeline.git.branch >> ]
