@@ -65,7 +65,7 @@ jobs:
         type: string
       image:
         type: string
-      version:
+      php_version:
         type: string
         default: ""
     machine: true
@@ -82,7 +82,9 @@ jobs:
       - run:
           name: Build, Test and Release
           command: |
-            make build REGISTRY=skpr/php-<< parameters.executor >> ARCH=<< parameters.executor >> VERSION=<< parameters.version >>
+            GIT_VERSION=$(git describe --tags --always)
+            echo ${GIT_VERSION}
+            make build REGISTRY=skpr/php-<< parameters.executor >> ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> GIT_VERSION=${GIT_VERSION}
       - when:
           condition:
             equal: ["main", << pipeline.git.branch >> ]
@@ -90,12 +92,14 @@ jobs:
             - run:
                 name: "Push image"
                 command: |
+                  GIT_VERSION=$(git describe --tags --always)
+                  echo ${GIT_VERSION}
                   docker login -u $DOCKER_USER -p $DOCKER_PASS
-                  make push REGISTRY=skpr/php-<< parameters.executor >> VERSION=<< parameters.version >>
+                  make push REGISTRY=skpr/php-<< parameters.executor >> PHP_VERSION=<< parameters.version >> GIT_VERSION=${GIT_VERSION}
 
   manifest:
     parameters:
-      version:
+      php_version:
         type: string
     docker:
       - image: docker:stable
@@ -107,6 +111,8 @@ jobs:
       - run:
           name: Push Manifest
           command: |
+            GIT_VERSION=$(git describe --tags --always)
+            echo ${GIT_VERSION}
             export DOCKER_CLI_EXPERIMENTAL=enabled
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            make manifest VERSION=<< parameters.version >>
+            make manifest PHP_VERSION=<< parameters.php_version >> GIT_VERSION=${GIT_VERSION}
