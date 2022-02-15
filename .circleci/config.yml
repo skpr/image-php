@@ -105,7 +105,7 @@ jobs:
           command: |
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            ALL_IMAGES="skpr/php skpr/php-fpm skpr/php-cli"
+            ALL_IMAGES="skpr/php-fpm skpr/php-cli"
             for IMAGE in ${ALL_IMAGES}; do \
               docker manifest create ${IMAGE}:<< parameters.php_version >>-v2-latest \
                 --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-arm64 \
