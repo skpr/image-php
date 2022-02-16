@@ -66,11 +66,11 @@ manifest:
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
-	IMAGE="skpr/php-fpm:${PHP_VERSION}-${VERSION_TAG}-dev"
+	IMAGE="skpr/php-fpm:${PHP_VERSION}-dev-${VERSION_TAG}"
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
-	IMAGE="skpr/php-fpm:${PHP_VERSION}-${VERSION_TAG}-xdebug"
+	IMAGE="skpr/php-fpm:${PHP_VERSION}-xdebug-${VERSION_TAG}"
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
@@ -78,11 +78,11 @@ manifest:
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
-	IMAGE="skpr/php-cli:${PHP_VERSION}-${VERSION_TAG}-dev"
+	IMAGE="skpr/php-cli:${PHP_VERSION}-dev-${VERSION_TAG}"
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
-	IMAGE="skpr/php-cli:${PHP_VERSION}-${VERSION_TAG}-xdebug"
+	IMAGE="skpr/php-cli:${PHP_VERSION}-xdebug-${VERSION_TAG}"
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
