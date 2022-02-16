@@ -19,9 +19,6 @@ php_versions: &php_versions
   - "8.0"
   - "8.1"
 
-image_repos: &image_repos
-  - "skpr/php-fpm"
-  - "skpr/php-cli"
 
 workflows:
   build:
@@ -38,7 +35,6 @@ workflows:
           matrix:
             parameters:
               php_version: *php_versions
-              image_repo: *image_repos
           requires: [ build ]
           filters:
             branches:
@@ -58,7 +54,6 @@ workflows:
           matrix:
             parameters:
               php_version: *php_versions
-              image_repo: *image_repos
           requires: [ build ]
           filters:
             branches:
@@ -100,6 +95,7 @@ jobs:
       - run:
           name: Build, Test and Release
           command: |
+            SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
             make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
             make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
       - when:
@@ -110,14 +106,13 @@ jobs:
                 name: "Push image"
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                  SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
                   make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
                   make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
 
   manifest:
     parameters:
       php_version:
-        type: string
-      image_repo:
         type: string
     docker:
       - image: cimg/base:2022.02
@@ -132,5 +127,5 @@ jobs:
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
-            make manifest REPOSITORY=<< parameters.image_repo >> PHP_VERSION=<< parameters.php_version >>
-            make manifest REPOSITORY=<< parameters.image_repo >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
+            make manifest PHP_VERSION=<< parameters.php_version >>
+            make manifest PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
