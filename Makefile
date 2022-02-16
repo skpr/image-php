@@ -58,11 +58,37 @@ push: validate
 	docker push ${IMAGE_CIRCLECI}-${VERSION_TAG}-${ARCH}
 
 manifest:
-	for REGISTRY in skpr/php skpr/php-fpm skpr/php-fpm-xdebug skpr/php-fpm-dev skpr/php-cli skpr/php-cli-dev skpr/php-cli-xdebug ; do \
-  		IMAGE="$${REGISTRY}:$${PHP_VERSION}-$${VERSION_TAG}"; \
-		docker manifest create $$IMAGE --amend $$IMAGE-arm64 --amend $$IMAGE-amd64; \
-		docker manifest push $$IMAGE; \
-	done
+	IMAGE="skpr/php:${PHP_VERSION}-${VERSION_TAG}"
+	docker manifest create $IMAGE --amend $IMAGE-arm64 --amend $IMAGE-amd64
+	docker manifest push $IMAGE
+
+	IMAGE="skpr/php-fpm:${PHP_VERSION}-${VERSION_TAG}"
+	docker manifest create $IMAGE --amend $IMAGE-arm64 --amend $IMAGE-amd64
+	docker manifest push $IMAGE
+
+	IMAGE="skpr/php-fpm:${PHP_VERSION}-${VERSION_TAG}-dev"
+	docker manifest create $IMAGE --amend $IMAGE-arm64 --amend $IMAGE-amd64
+	docker manifest push $IMAGE
+
+	IMAGE="skpr/php-fpm:${PHP_VERSION}-${VERSION_TAG}-xdebug"
+	docker manifest create $IMAGE --amend $IMAGE-arm64 --amend $IMAGE-amd64
+	docker manifest push $IMAGE
+
+	IMAGE="skpr/php-cli:${PHP_VERSION}-${VERSION_TAG}"
+	docker manifest create $IMAGE --amend $IMAGE-arm64 --amend $IMAGE-amd64
+	docker manifest push $IMAGE
+
+	IMAGE="skpr/php-cli:${PHP_VERSION}-${VERSION_TAG}-dev"
+	docker manifest create $IMAGE --amend $IMAGE-arm64 --amend $IMAGE-amd64
+	docker manifest push $IMAGE
+
+	IMAGE="skpr/php-cli:${PHP_VERSION}-${VERSION_TAG}-xdebug"
+	docker manifest create $IMAGE --amend $IMAGE-arm64 --amend $IMAGE-amd64
+	docker manifest push $IMAGE
+
+	IMAGE="skpr/php-circleci:${PHP_VERSION}-${VERSION_TAG}"
+	docker manifest create $IMAGE --amend $IMAGE-arm64 --amend $IMAGE-amd64
+	docker manifest push $IMAGE
 
 validate:
 ifndef PHP_VERSION
