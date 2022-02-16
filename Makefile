@@ -58,7 +58,7 @@ push: validate
 	docker push ${IMAGE_CIRCLECI}-${VERSION_TAG}-${ARCH}
 
 manifest:
-	for REGISTRY in skpr/php skpr/php-fpm skpr/php-fpm-xdebug skpr/fpm-dev skpr/cli skpr/cli-dev skpr/cli-xdebug ; do \
+	for REGISTRY in skpr/php skpr/php-fpm skpr/php-fpm-xdebug skpr/php-fpm-dev skpr/php-cli skpr/php-cli-dev skpr/php-cli-xdebug ; do \
 		docker manifest create ${REGISTRY}:${PHP_VERSION}-${VERSION_TAG} \
 		  --amend ${REGISTRY}:${PHP_VERSION}-${VERSION_TAG}-arm64 \
 		  --amend ${REGISTRY}:${PHP_VERSION}-${VERSION_TAG}-amd64; \
