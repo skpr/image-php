@@ -18,8 +18,6 @@ IMAGE_CLI_XDEBUG=${IMAGE_CLI}-xdebug
 
 IMAGE_CIRCLECI=${REGISTRY}-circleci:${PHP_VERSION}
 
-ALL_IMAGES=${IMAGE_FPM} ${IMAGE_CLI} ${IMAGE_FPM_DEV} ${IMAGE_CLI_DEV} ${IMAGE_FPM_XDEBUG} ${IMAGE_CLI_XDEBUG} ${IMAGE_CIRCLECI}
-
 build: validate
 	# Building production images.
 	docker build --no-cache ${COMMON_BUILD_ARGS} -t ${IMAGE_BASE}-${VERSION_TAG}-${ARCH} base
@@ -60,12 +58,10 @@ push: validate
 	docker push ${IMAGE_CIRCLECI}-${VERSION_TAG}-${ARCH}
 
 manifest:
-	for IMAGE in ${ALL_IMAGES}; do \
-		docker manifest create $${IMAGE}-${VERSION_TAG} \
-		  --amend $${IMAGE}-${VERSION_TAG}-arm64 \
-		  --amend $${IMAGE}-${VERSION_TAG}-amd64; \
-		docker manifest push $${IMAGE}-${VERSION_TAG}; \
-	done
+	docker manifest create ${REGISTRY}:${PHP_VERSION}-${VERSION_TAG} \
+	  --amend ${REGISTRY}:${PHP_VERSION}-${VERSION_TAG}-arm64 \
+	  --amend ${REGISTRY}:${PHP_VERSION}-${VERSION_TAG}-amd64
+	docker manifest push ${REGISTRY}:${PHP_VERSION}-${VERSION_TAG}
 
 validate:
 ifndef PHP_VERSION

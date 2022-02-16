@@ -42,8 +42,7 @@ workflows:
           requires: [ build ]
           filters:
             branches:
-              only:
-                - main
+              only: [ main ]
 
   nightly:
     jobs:
@@ -63,16 +62,14 @@ workflows:
           requires: [ build ]
           filters:
             branches:
-              only:
-                - main
+              only: [ main ]
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
           cron: "0 15 * * *"
           filters:
             branches:
-              only:
-                - main
+              only: [ main ]
 
 jobs:
   build:
@@ -89,6 +86,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Get SHA1 version
+          command: |
+            SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
+            echo 'export SHA1_VERSION=$SHA1_VERSION' >> $BASH_ENV
+      - run:
           name: "Install: Container Structure Tests"
           command: |
             curl -LO https://storage.googleapis.com/container-structure-test/v1.11.0/container-structure-test-linux-<< parameters.executor >> && \
@@ -99,6 +101,7 @@ jobs:
           name: Build, Test and Release
           command: |
             make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
+            make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
       - when:
           condition:
             equal: ["main", << pipeline.git.branch >> ]
@@ -108,6 +111,7 @@ jobs:
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                   make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
+                  make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
 
   manifest:
     parameters:
@@ -127,11 +131,6 @@ jobs:
           command: |
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker manifest create << parameters.image_repo >>:<< parameters.php_version >>-v2-latest \
-              --amend << parameters.image_repo >>:<< parameters.php_version >>-v2-latest-arm64 \
-              --amend << parameters.image_repo >>:<< parameters.php_version >>-v2-latest-amd64;
-            docker manifest create ${IMAGE}:<< parameters.php_version >>-dev-v2-latest \
-              --amend << parameters.image_repo >>:<< parameters.php_version >>-xdebug-v2-latest-arm64 \
-              --amend << parameters.image_repo >>:<< parameters.php_version >>-xdebug-v2-latest-amd64;
-            docker manifest push << parameters.image_repo >>:<< parameters.php_version >>-v2-latest
-            docker manifest push << parameters.image_repo >>:<< parameters.php_version >>-dev-v2-latest
+            SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
+            make manifest REPOSITORY=<< parameters.image_repo >> PHP_VERSION=<< parameters.php_version >>
+            make manifest REPOSITORY=<< parameters.image_repo >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
