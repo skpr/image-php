@@ -19,6 +19,10 @@ php_versions: &php_versions
   - "8.0"
   - "8.1"
 
+image_repos: &image_repos
+  - "skpr/php-fpm"
+  - "skpr/php-cli"
+
 workflows:
   build:
     jobs:
@@ -34,6 +38,7 @@ workflows:
           matrix:
             parameters:
               php_version: *php_versions
+              image_repo: *image_repos
           requires: [ build ]
           filters:
             branches:
@@ -44,12 +49,22 @@ workflows:
     jobs:
       - build:
           context: docker-publishing
-          name: php
           image: php
           matrix:
             parameters:
               php_version: *php_versions
               executor: *platforms
+      - manifest:
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              image_repo: *image_repos
+          requires: [ build ]
+          filters:
+            branches:
+              only:
+                - main
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
@@ -84,17 +99,24 @@ jobs:
           name: Build, Test and Release
           command: |
             make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
-            if [ "$CIRCLE_BRANCH" == "main" ]; then
-              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-              make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
-            fi
+      - when:
+          condition:
+            equal: ["main", << pipeline.git.branch >> ]
+          steps:
+            - run:
+                name: "Push image"
+                command: |
+                  echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                  make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >>
 
   manifest:
     parameters:
       php_version:
         type: string
+      image_repo:
+        type: string
     docker:
-      - image: docker:stable
+      - image: cimg/base:2022.02
     steps:
       - checkout
       - setup_remote_docker:
@@ -105,14 +127,11 @@ jobs:
           command: |
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            ALL_IMAGES="skpr/php-fpm skpr/php-cli"
-            for IMAGE in ${ALL_IMAGES}; do \
-              docker manifest create ${IMAGE}:<< parameters.php_version >>-v2-latest \
-                --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-arm64 \
-                --amend ${IMAGE}:<< parameters.php_version >>-v2-latest-amd64;
-              docker manifest create ${IMAGE}:<< parameters.php_version >>-xdebug-v2-latest \
-                --amend ${IMAGE}:<< parameters.php_version >>-xdebug-v2-latest-arm64 \
-                --amend ${IMAGE}:<< parameters.php_version >>-xdebug-v2-latest-amd64;
-              docker manifest push ${IMAGE}:<< parameters.php_version >>-v2-latest;
-              docker manifest push ${IMAGE}:<< parameters.php_version >>-xdebug-v2-latest;
-            done
+            docker manifest create << parameters.image_repo >>:<< parameters.php_version >>-v2-latest \
+              --amend << parameters.image_repo >>:<< parameters.php_version >>-v2-latest-arm64 \
+              --amend << parameters.image_repo >>:<< parameters.php_version >>-v2-latest-amd64;
+            docker manifest create ${IMAGE}:<< parameters.php_version >>-dev-v2-latest \
+              --amend << parameters.image_repo >>:<< parameters.php_version >>-xdebug-v2-latest-arm64 \
+              --amend << parameters.image_repo >>:<< parameters.php_version >>-xdebug-v2-latest-amd64;
+            docker manifest push << parameters.image_repo >>:<< parameters.php_version >>-v2-latest
+            docker manifest push << parameters.image_repo >>:<< parameters.php_version >>-dev-v2-latest
