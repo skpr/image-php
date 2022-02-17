@@ -96,8 +96,8 @@ jobs:
           name: Build, Test and Release
           command: |
             SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
-            make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-latest
-            make build REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
+            make build ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-latest
+            make build ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
       - when:
           condition:
             equal: ["main", << pipeline.git.branch >> ]
@@ -107,8 +107,8 @@ jobs:
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                   SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
-                  make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-latest
-                  make push REGISTRY=skpr/php ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
+                  make push ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-latest
+                  make push ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
 
   manifest:
     parameters:

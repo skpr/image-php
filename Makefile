@@ -59,8 +59,7 @@ push: validate
 
 manifest:
 	# Building skpr/php
-	$(eval IMAGE="skpr/php:${PHP_VERSION}-${VERSION_TAG}")
-	echo "${IMAGE}"
+	$(eval IMAGE=skpr/php:${PHP_VERSION}-${VERSION_TAG})
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
