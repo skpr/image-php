@@ -74,8 +74,6 @@ jobs:
         default: ""
       executor:
         type: string
-      image:
-        type: string
     machine: true
     executor: << parameters.executor >>
     steps:
