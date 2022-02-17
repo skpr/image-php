@@ -25,7 +25,6 @@ workflows:
     jobs:
       - build:
           context: docker-publishing
-          image: php
           matrix:
             parameters:
               php_version: *php_versions
@@ -44,7 +43,6 @@ workflows:
     jobs:
       - build:
           context: docker-publishing
-          image: php
           matrix:
             parameters:
               php_version: *php_versions
