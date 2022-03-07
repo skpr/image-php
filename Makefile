@@ -33,10 +33,6 @@ build: validate
 	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_FPM}-${VERSION_TAG}-${ARCH} -t ${IMAGE_FPM}-dev-${VERSION_TAG}-${ARCH} dev
 	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${VERSION_TAG}-${ARCH} -t ${IMAGE_CLI}-dev-${VERSION_TAG}-${ARCH} dev
 
-	# Building Xdebug images.
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_FPM_DEV}-${VERSION_TAG}-${ARCH} -t ${IMAGE_FPM_XDEBUG}-${VERSION_TAG}-${ARCH} xdebug
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI_DEV}-${VERSION_TAG}-${ARCH} -t ${IMAGE_CLI_XDEBUG}-${VERSION_TAG}-${ARCH} xdebug
-
 	# Building CircleCI images.
 	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${VERSION_TAG}-${ARCH} --build-arg NODE_VERSION=10 -t ${IMAGE_CIRCLECI}-${VERSION_TAG}-${ARCH} circleci
 
@@ -49,10 +45,6 @@ push: validate
 	# Pushing dev images.
 	docker push ${IMAGE_FPM_DEV}-${VERSION_TAG}-${ARCH}
 	docker push ${IMAGE_CLI_DEV}-${VERSION_TAG}-${ARCH}
-
-	# Pushing Xdebug images.
-	docker push ${IMAGE_FPM_XDEBUG}-${VERSION_TAG}-${ARCH}
-	docker push ${IMAGE_CLI_XDEBUG}-${VERSION_TAG}-${ARCH}
 
 	# Pushing CircleCI images.
 	docker push ${IMAGE_CIRCLECI}-${VERSION_TAG}-${ARCH}
@@ -73,11 +65,6 @@ manifest:
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
-	# Building skpr/php-fpm xdebug
-	$(eval IMAGE="skpr/php-fpm:${PHP_VERSION}-xdebug-${VERSION_TAG}")
-	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
-	docker manifest push ${IMAGE}
-
 	# Building skpr/php-cli
 	$(eval IMAGE="skpr/php-cli:${PHP_VERSION}-${VERSION_TAG}")
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
@@ -85,11 +72,6 @@ manifest:
 
 	# Building skpr/php-cli dev
 	$(eval IMAGE="skpr/php-cli:${PHP_VERSION}-dev-${VERSION_TAG}")
-	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
-	docker manifest push ${IMAGE}
-
-	# Building skpr/php-cli xdebug
-	$(eval IMAGE="skpr/php-cli:${PHP_VERSION}-xdebug-${VERSION_TAG}")
 	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
 	docker manifest push ${IMAGE}
 
