@@ -6,15 +6,10 @@ ARG ARCH=amd64
 ARG ALPINE_VERSION=3.14
 ARG PHP_VERSION=8.0
 
-
 ENV ALPINE_VERSION=${ALPINE_VERSION}
-ENV NEW_RELIC_ENABLED=false
-# ENV NEW_RELIC_APP_NAME=My Application
-# ENV NEW_RELIC_LICENSE_KEY=xxxxxxxxxxxxxxxxx
 ENV PHP_MEMORY_LIMIT=128M
 ENV PHP_LOG_LIMIT=4096
 ENV PATH "$PATH:/data/bin"
-
 
 RUN apk add util-linux ca-certificates
 RUN adduser -D -u 1000 skpr
@@ -79,17 +74,6 @@ RUN if [[ "$PHP_VERSION" = "7.4" ]]; then \
     apk --update --no-cache add php${PHP_VERSION}-json; \
 fi
 
-# New Relic - https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes
-
-RUN export NR_INSTALL_SILENT=true && \
-    export NR_INSTALL_USE_CP_NOT_LN=true && \
-    export NR_VERSION=9.19.0.309 && \
-    export NR_FILENAME=newrelic-php5-${NR_VERSION}-linux-musl && \
-    curl -sSL https://download.newrelic.com/php_agent/archive/${NR_VERSION}/${NR_FILENAME}.tar.gz | gzip -dc | tar xf - && \
-    cd ${NR_FILENAME} && ./newrelic-install install && \
-    rm -fR /data/${NR_FILENAME} && \
-    rm -f /etc/php/conf.d/newrelic.ini;
-
 RUN export SKPRMAIL_VERSION=0.0.9 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
@@ -99,7 +83,6 @@ COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
 
 ADD conf.d/01_apcu.ini /etc/php/conf.d/01_apcu.ini
 ADD conf.d/50_overrides.ini /etc/php/conf.d/50_overrides.ini
-ADD conf.d/01_newrelic.ini /etc/php/conf.d/01_newrelic.ini
 
 # Drush uses /tmp.
 VOLUME /tmp
