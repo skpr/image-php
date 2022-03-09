@@ -22,10 +22,10 @@ build: validate
 	# Building base image.
 	docker build --no-cache ${COMMON_BUILD_ARGS} -t ${IMAGE_BASE}-${VERSION_TAG}-${ARCH} base
 
-	ifeq ($(ARCH), amd64)
-		# Building base image with New Relic support.
-		docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_BASE}-${VERSION_TAG}-${ARCH} -t ${IMAGE_BASE}-${VERSION_TAG}-${ARCH} newrelic
-	endif
+ifeq ($(ARCH), amd64)
+	# Building base image with New Relic support.
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_BASE}-${VERSION_TAG}-${ARCH} -t ${IMAGE_BASE}-${VERSION_TAG}-${ARCH} newrelic
+endif
 
 	# Building production images.
 	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_BASE}-${VERSION_TAG}-${ARCH} -t ${IMAGE_FPM}-${VERSION_TAG}-${ARCH} fpm
