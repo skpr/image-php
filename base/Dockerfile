@@ -90,7 +90,8 @@ RUN export NR_INSTALL_SILENT=true && \
     rm -fR /data/${NR_FILENAME} && \
     rm -f /etc/php/conf.d/newrelic.ini;
 
-RUN curl -sSL https://github.com/skpr/mail/releases/download/v0.0.9/skprmail_linux_${ARCH} -o /usr/local/bin/skprmail && \
+RUN export SKPRMAIL_VERSION=0.0.9 && \
+    curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
 
 # Built using an updated build approach in this fork: https://github.com/skpr/docconv
