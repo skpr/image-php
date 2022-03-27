@@ -19,6 +19,8 @@ COPY --chown=skpr:skpr conf.d /etc/php/conf.d
 
 ENV PHP_FPM_REQUEST_TIMEOUT 600
 
-ENV XDEBUG_MODE=debug
+VOLUME /tmp/xdebug
+RUN chown -R skpr:skpr /tmp/xdebug
 
 USER skpr
+
