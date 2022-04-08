@@ -74,7 +74,7 @@ RUN if [[ "$PHP_VERSION" = "7.4" ]]; then \
     apk --update --no-cache add php${PHP_VERSION}-json; \
 fi
 
-RUN export SKPRMAIL_VERSION=0.0.9 && \
+RUN export SKPRMAIL_VERSION=0.0.10-alpha2 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
 
