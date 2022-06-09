@@ -4,5 +4,4 @@ commandTests:
   - name:  "zend-assertions"
     command: "php"
     args: ["-i"]
-    excludedError: ['.*zend.assertions => 1.*']
-    exitCode: 0
+    expectedOutput: ['.*zend.assertions => 1.*']
