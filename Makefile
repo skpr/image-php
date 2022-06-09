@@ -40,8 +40,12 @@ endif
 	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_FPM}-${VERSION_TAG}-${ARCH} -t ${IMAGE_FPM}-dev-${VERSION_TAG}-${ARCH} dev
 	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${VERSION_TAG}-${ARCH} -t ${IMAGE_CLI}-dev-${VERSION_TAG}-${ARCH} dev
 
+	container-structure-test test --image ${IMAGE_FPM_DEV}-${VERSION_TAG}-${ARCH} --config dev/tests.yml
+
 	# Building CircleCI images.
 	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${VERSION_TAG}-${ARCH} --build-arg NODE_VERSION=10 -t ${IMAGE_CIRCLECI}-${VERSION_TAG}-${ARCH} circleci
+
+	container-structure-test test --image ${IMAGE_CIRCLECI}-${VERSION_TAG}-${ARCH} --config circleci/fpm/tests.yml
 
 push: validate
 	# Pushing production images
