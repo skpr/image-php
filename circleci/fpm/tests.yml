@@ -1,0 +1,8 @@
+schemaVersion: '2.0.0'
+
+commandTests:
+  - name:  "zend-assertions"
+    command: "php"
+    args: ["-i"]
+    excludedError: ['.*zend.assertions => 1.*']
+    exitCode: 0
