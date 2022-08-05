@@ -25,7 +25,8 @@ ENV PHP_FPM_PORT=9000 \
     PHP_FPM_START_SERVERS=2 \
     PHP_FPM_MIN_SPARE_SERVERS=2 \
     PHP_FPM_MAX_SPARE_SERVERS=10 \
-    PHP_FPM_MAX_REQUESTS=500
+    PHP_FPM_MAX_REQUESTS=500 \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 EXPOSE 9000
 
@@ -71,6 +72,9 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
   npx --version && \
   yarn --version && \
   yarnpkg --version
+
+# Yarn packages
+RUN yarn add puppeteer@latest
 
 RUN apk --update --no-cache add ruby ruby-dev && \
     gem install -N bundler:2.0.2
