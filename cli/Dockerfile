@@ -4,7 +4,7 @@ ARG ARCH=amd64
 
 FROM alpine:${ALPINE_VERSION} as redis-cli
 
-RUN apk add redis
+RUN apk add redis less
 
 FROM ${IMAGE}
 
