@@ -4,7 +4,7 @@ ARG ARCH=amd64
 
 FROM alpine:${ALPINE_VERSION} as redis-cli
 
-RUN apk add redis less
+RUN apk add redis
 
 FROM ${IMAGE}
 
@@ -28,7 +28,8 @@ RUN apk --update --no-cache add \
       openssh-client \
       patch \
       git \
-      jq
+      jq \
+      less
 
 RUN curl -sS https://getcomposer.org/download/latest-1.x/composer.phar -o /usr/local/bin/composer1 && \
     chmod +x /usr/local/bin/composer1
