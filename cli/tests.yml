@@ -20,3 +20,9 @@ commandTests:
     command: "redis-cli"
     args: ["--version"]
     exitCode: 0
+
+  - name: 'correct less binary installed'
+    command: "less"
+    args: ["--version"]
+    expectedOutput: ["Mark Nudelman"]
+    exitCode: 0
