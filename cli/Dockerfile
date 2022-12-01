@@ -20,16 +20,16 @@ ENV PS1='\u@\h:\W \$ '
 COPY --from=redis-cli /usr/bin/redis-cli /usr/bin/redis-cli
 
 RUN apk --update --no-cache add \
-      make \
       bash \
       curl \
-      rsync \
-      vim \
-      openssh-client \
-      patch \
       git \
       jq \
-      less
+      less \
+      make \
+      openssh-client \
+      patch \
+      rsync \
+      vim
 
 RUN curl -sS https://getcomposer.org/download/latest-1.x/composer.phar -o /usr/local/bin/composer1 && \
     chmod +x /usr/local/bin/composer1
