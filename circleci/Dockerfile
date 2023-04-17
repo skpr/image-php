@@ -59,9 +59,7 @@ RUN apk --update --no-cache add bash \
 # https://github.com/nodejs/docker-node/blob/main/14/alpine3.17/Dockerfile
 ENV NODE_VERSION=14.21.3
 
-RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node \
-    && apk add --no-cache \
+RUN apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         curl \
