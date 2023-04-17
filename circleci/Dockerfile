@@ -1,5 +1,4 @@
 ARG IMAGE=skpr/php-cli:8.0-1.x
-ENV NODE_VERSION=14.21.3
 ARG PHP_VERSION=8.0
 
 FROM ${IMAGE}
@@ -58,6 +57,8 @@ RUN apk --update --no-cache add bash \
   chromium
 
 # https://github.com/nodejs/docker-node/blob/main/14/alpine3.17/Dockerfile
+ENV NODE_VERSION=14.21.3
+
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
