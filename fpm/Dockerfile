@@ -8,6 +8,9 @@ RUN apk --update --no-cache add \
 COPY conf.d/50_fpm.ini /etc/php/conf.d/50_fpm.ini
 COPY php-fpm.conf /etc/php/php-fpm.conf
 
+# Ensure the FPM configuration directory is empty.
+RUN rm -f /etc/php/php-fpm.d/*.conf
+
 EXPOSE 9000
 
 USER skpr
