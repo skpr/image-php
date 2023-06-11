@@ -1,3 +1,4 @@
+ARG IMAGE=skpr/php:8.0-1.x
 ARG ALPINE_VERSION=3.16
 ARG ARCH=amd64
 
