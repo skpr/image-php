@@ -34,7 +34,6 @@ RUN apk --update --no-cache add \
       php${PHP_VERSION}-ftp \
       php${PHP_VERSION}-fileinfo \
       php${PHP_VERSION}-gd \
-      php${PHP_VERSION}-iconv \
       php${PHP_VERSION}-mbstring \
       php${PHP_VERSION}-opcache \
       php${PHP_VERSION}-openssl \
