@@ -22,15 +22,28 @@ php_versions: &php_versions
   - "8.2"
 
 workflows:
-  build:
+  build_test:
     jobs:
       - build:
+          stream: test
+          push: false
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              executor: *platforms
+
+  build_edge:
+    jobs:
+      - build:
+          stream: edge
           context: docker-publishing
           matrix:
             parameters:
               php_version: *php_versions
               executor: *platforms
       - manifest:
+          stream: edge
           context: docker-publishing
           matrix:
             parameters:
@@ -40,23 +53,42 @@ workflows:
             branches:
               only: [ main ]
 
-  nightly:
+  build_latest:
     jobs:
       - build:
+          stream: latest
           context: docker-publishing
           matrix:
             parameters:
               php_version: *php_versions
               executor: *platforms
       - manifest:
+          stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+          requires: [ releases ]
+          filters:
+            branches:
+              only: [ releases ]
+
+  nightly_edge:
+    jobs:
+      - build:
+          stream: edge
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              executor: *platforms
+      - manifest:
+          stream: edge
           context: docker-publishing
           matrix:
             parameters:
               php_version: *php_versions
           requires: [ build ]
-          filters:
-            branches:
-              only: [ main ]
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
@@ -65,6 +97,30 @@ workflows:
             branches:
               only: [ main ]
 
+  nightly_latest:
+    jobs:
+      - build:
+          stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              executor: *platforms
+      - manifest:
+          stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+          requires: [ build ]
+    triggers:
+      - schedule:
+          # Scheduled build for 2am AEST nightly.
+          cron: "0 15 * * *"
+          filters:
+            branches:
+              only: [ releases ]
+
 jobs:
   build:
     parameters:
@@ -72,6 +128,11 @@ jobs:
         type: string
         default: ""
       executor:
+        type: string
+      push:
+        type: boolean
+        default: true
+      stream:
         type: string
     machine: true
     executor: << parameters.executor >>
@@ -93,23 +154,25 @@ jobs:
           name: Build, Test and Release
           command: |
             SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
-            make build ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-latest
+            make build ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-<< parameters.stream >>
             make build ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
       - when:
           condition:
-            equal: ["main", << pipeline.git.branch >> ]
+            equal: [ true, << parameters.push >> ]
           steps:
             - run:
                 name: "Push image"
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                   SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
-                  make push ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-latest
+                  make push ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-<< parameters.stream >>
                   make push ARCH=<< parameters.executor >> PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
 
   manifest:
     parameters:
       php_version:
+        type: string
+      stream:
         type: string
     docker:
       - image: cimg/base:2022.02
@@ -124,5 +187,5 @@ jobs:
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             SHA1_VERSION="v2-$(git rev-parse --short HEAD)"
-            make manifest PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-latest
+            make manifest PHP_VERSION=<< parameters.php_version >> VERSION_TAG=v2-<< parameters.stream >>
             make manifest PHP_VERSION=<< parameters.php_version >> VERSION_TAG=${SHA1_VERSION}
