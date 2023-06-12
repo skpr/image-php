@@ -32,6 +32,9 @@ workflows:
             parameters:
               php_version: *php_versions
               executor: *platforms
+          filters:
+            branches:
+              ignore: [ main, releases ]
 
   build_edge:
     jobs:
