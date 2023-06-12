@@ -50,7 +50,7 @@ RUN apk --update --no-cache add bash \
   git \
   openssh-client \
   # Below are for packages such as https://www.npmjs.com/package/sharp
-  python2 \
+  python3 \
   autoconf \
   automake \
   libpng-dev \
