@@ -68,7 +68,7 @@ workflows:
           matrix:
             parameters:
               php_version: *php_versions
-          requires: [ releases ]
+          requires: [ build ]
           filters:
             branches:
               only: [ releases ]
