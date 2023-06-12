@@ -42,6 +42,9 @@ workflows:
             parameters:
               php_version: *php_versions
               executor: *platforms
+          filters:
+            branches:
+              only: [ main ]
       - manifest:
           stream: edge
           context: docker-publishing
@@ -62,6 +65,9 @@ workflows:
             parameters:
               php_version: *php_versions
               executor: *platforms
+          filters:
+            branches:
+              only: [ releases ]
       - manifest:
           stream: latest
           context: docker-publishing
@@ -82,6 +88,9 @@ workflows:
             parameters:
               php_version: *php_versions
               executor: *platforms
+          filters:
+            branches:
+              only: [ main ]
       - manifest:
           stream: edge
           context: docker-publishing
@@ -89,6 +98,9 @@ workflows:
             parameters:
               php_version: *php_versions
           requires: [ build ]
+          filters:
+            branches:
+              only: [ main ]
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
@@ -106,6 +118,9 @@ workflows:
             parameters:
               php_version: *php_versions
               executor: *platforms
+          filters:
+            branches:
+              only: [ releases ]
       - manifest:
           stream: latest
           context: docker-publishing
@@ -113,6 +128,9 @@ workflows:
             parameters:
               php_version: *php_versions
           requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
