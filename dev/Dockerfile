@@ -6,7 +6,9 @@ ARG ARCH=amd64
 
 USER root
 
-RUN apk add php${PHP_VERSION}-xdebug
+RUN apk --update --no-cache add \
+      php${PHP_VERSION}-xdebug \
+      php${PHP_VERSION}-spx
 
 # https://blog.blackfire.io/alpine-linux-support.html
 RUN curl -sSL -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/${ARCH}/${PHP_VERSION//./} && \
@@ -15,12 +17,13 @@ RUN curl -sSL -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blac
     mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so && \
     rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
 
-COPY --chown=skpr:skpr conf.d /etc/php/conf.d
+COPY --chown=skpr:skpr etc /etc
 
 ENV PHP_FPM_REQUEST_TIMEOUT 600
 
+RUN mkdir -p /tmp/xdebug && \
+    chown -R skpr:skpr /tmp/xdebug
 VOLUME /tmp/xdebug
-RUN chown -R skpr:skpr /tmp/xdebug
 
 USER skpr
 
