@@ -60,6 +60,7 @@ RUN apk --update --no-cache add \
       pngquant \
       jpegoptim \
       mysql-client \
+      mariadb-connector-c \
       optipng \
       tesseract-ocr \
       tesseract-ocr-dev \
