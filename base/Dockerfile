@@ -81,10 +81,8 @@ COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
 ADD conf.d/01_apcu.ini /etc/php/conf.d/01_apcu.ini
 ADD conf.d/50_overrides.ini /etc/php/conf.d/50_overrides.ini
 
-USER root
 ADD certs/skpr-alb-internal.crt /usr/local/share/ca-certificates/skpr-alb-internal.crt
 RUN cat /usr/local/share/ca-certificates/skpr-alb-internal.crt >> /etc/ssl/certs/ca-certificates.crt
-USER skpr
 
 # Drush uses /tmp.
 VOLUME /tmp
