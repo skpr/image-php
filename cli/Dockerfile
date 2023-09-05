@@ -29,6 +29,7 @@ RUN apk --update --no-cache add \
       openssh-client \
       patch \
       rsync \
+      tar \
       vim
 
 RUN curl -sS https://getcomposer.org/download/latest-1.x/composer.phar -o /usr/local/bin/composer1 && \
