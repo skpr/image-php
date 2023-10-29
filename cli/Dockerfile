@@ -1,5 +1,5 @@
 ARG IMAGE=skpr/php:8.0-1.x
-ARG ALPINE_VERSION=3.17
+ARG ALPINE_VERSION=3.18
 ARG ARCH=amd64
 
 FROM alpine:${ALPINE_VERSION} as redis-cli
@@ -29,6 +29,7 @@ RUN apk --update --no-cache add \
       openssh-client \
       patch \
       rsync \
+      tar \
       vim
 
 RUN curl -sS https://getcomposer.org/download/latest-1.x/composer.phar -o /usr/local/bin/composer1 && \
