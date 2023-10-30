@@ -9,7 +9,9 @@ COPY conf.d/50_fpm.ini /etc/php/conf.d/50_fpm.ini
 COPY php-fpm.conf /etc/php/php-fpm.conf
 
 # Ensure the FPM configuration directory is empty.
-RUN rm -f /etc/php/php-fpm.d/*.conf
+# Create an empty file to ensure there are no warnings.
+RUN rm -f /etc/php/php-fpm.d/*.conf && \
+    touch /etc/php/php-fpm.d/empty.conf
 
 EXPOSE 9000
 
