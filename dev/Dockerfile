@@ -9,7 +9,7 @@ USER root
 RUN apk --update --no-cache add \
       php${PHP_VERSION}-xdebug
 
-RUN if [ "$PHP_VERSION" != "8.3" ]; then apk --update --no-cache add; fi
+RUN if [ "$PHP_VERSION" != "8.3" ]; then apk --update --no-cache add php${PHP_VERSION}-spx; fi
 
 # https://blog.blackfire.io/alpine-linux-support.html
 RUN curl -sSL -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/${ARCH}/${PHP_VERSION//./} && \
