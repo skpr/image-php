@@ -7,10 +7,8 @@ ARG ARCH=amd64
 USER root
 
 RUN apk --update --no-cache add \
-      php${PHP_VERSION}-xdebug
-
-# @todo remove when spx is available for php 8.3.
-RUN if [ "$PHP_VERSION" != "8.3" ]; then apk --update --no-cache add php${PHP_VERSION}-spx; fi
+      php${PHP_VERSION}-xdebug \
+      php${PHP_VERSION}-spx
 
 # https://blog.blackfire.io/alpine-linux-support.html
 RUN if [ "$PHP_VERSION" != "8.3" ]; then \
@@ -24,7 +22,7 @@ RUN if [ "$PHP_VERSION" != "8.3" ]; then \
 COPY --chown=skpr:skpr etc /etc
 
 # @todo remove when spx is available for php 8.3.
-RUN if [ "$PHP_VERSION" == "8.3" ]; then rm /etc/php/conf.d/01_spx.ini /etc/php/php-fpm.d/spx.conf /etc/php/conf.d/01_blackfire.ini; fi
+RUN if [ "$PHP_VERSION" == "8.3" ]; then rm /etc/php/conf.d/01_blackfire.ini; fi
 
 ENV PHP_FPM_REQUEST_TIMEOUT 600
 
