@@ -4,3 +4,4 @@ commandTests:
   - name: 'check configuration'
     command: "sh"
     args: ["-c", "mkdir /data/app && php-fpm --test"]
+    excludedError: [".*WARNING.*"]

@@ -26,3 +26,8 @@ commandTests:
     args: ["--version"]
     expectedOutput: ["Mark Nudelman"]
     exitCode: 0
+
+  - name: php modules
+    command: php
+    args: ['-m']
+    exitCode: 0
