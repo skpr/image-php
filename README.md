@@ -37,6 +37,12 @@ docker.io/skpr/php-fpm:8.2-v2-latest
 docker.io/skpr/php-fpm:8.2-dev-v2-latest
 docker.io/skpr/php-cli:8.2-v2-latest
 docker.io/skpr/php-cli:8.2-dev-v2-latest
+
+docker.io/skpr/php:8.3-v2-latest
+docker.io/skpr/php-fpm:8.3-v2-latest
+docker.io/skpr/php-fpm:8.3-dev-v2-latest
+docker.io/skpr/php-cli:8.3-v2-latest
+docker.io/skpr/php-cli:8.3-dev-v2-latest
 ```
 
 **Edge**
@@ -65,6 +71,12 @@ docker.io/skpr/php-fpm:8.2-v2-edge
 docker.io/skpr/php-fpm:8.2-dev-v2-edge
 docker.io/skpr/php-cli:8.2-v2-edge
 docker.io/skpr/php-cli:8.2-dev-v2-edge
+
+docker.io/skpr/php:8.3-v2-edge
+docker.io/skpr/php-fpm:8.3-v2-edge
+docker.io/skpr/php-fpm:8.3-dev-v2-edge
+docker.io/skpr/php-cli:8.3-v2-edge
+docker.io/skpr/php-cli:8.3-dev-v2-edge
 ```
 
 ## Building
