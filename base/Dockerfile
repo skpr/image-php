@@ -1,9 +1,9 @@
-ARG ALPINE_VERSION=3.18
+ARG ALPINE_VERSION=3.19
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
 FROM alpine:${ALPINE_VERSION}
 
 ARG ARCH=amd64
-ARG ALPINE_VERSION=3.18
+ARG ALPINE_VERSION=3.19
 ARG PHP_VERSION=8.0
 
 ENV ALPINE_VERSION=${ALPINE_VERSION}
@@ -72,7 +72,7 @@ RUN if [[ "$PHP_VERSION" = "7.4" ]]; then \
     apk --update --no-cache add php${PHP_VERSION}-json; \
 fi
 
-RUN export SKPRMAIL_VERSION=0.0.9 && \
+RUN export SKPRMAIL_VERSION=0.0.11 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
 
