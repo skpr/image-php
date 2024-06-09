@@ -37,29 +37,6 @@ workflows:
             branches:
               ignore: [ main, releases ]
 
-  build_edge:
-    jobs:
-      - build:
-          stream: edge
-          context: docker-publishing
-          matrix:
-            parameters:
-              php_version: *php_versions
-              executor: *platforms
-          filters:
-            branches:
-              only: [ main ]
-      - manifest:
-          stream: edge
-          context: docker-publishing
-          matrix:
-            parameters:
-              php_version: *php_versions
-          requires: [ build ]
-          filters:
-            branches:
-              only: [ main ]
-
   build_latest:
     jobs:
       - build:
@@ -71,7 +48,7 @@ workflows:
               executor: *platforms
           filters:
             branches:
-              only: [ releases ]
+              only: [ main ]
       - manifest:
           stream: latest
           context: docker-publishing
@@ -81,12 +58,35 @@ workflows:
           requires: [ build ]
           filters:
             branches:
-              only: [ releases ]
+              only: [ main ]
 
-  nightly_edge:
+  build_stable:
     jobs:
       - build:
-          stream: edge
+          stream: stable
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              executor: *platforms
+          filters:
+            branches:
+              only: [ releases ]
+      - manifest:
+          stream: stable
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
+
+  nightly_latest:
+    jobs:
+      - build:
+          stream: latest
           context: docker-publishing
           matrix:
             parameters:
@@ -96,7 +96,7 @@ workflows:
             branches:
               only: [ main ]
       - manifest:
-          stream: edge
+          stream: latest
           context: docker-publishing
           matrix:
             parameters:
@@ -113,10 +113,10 @@ workflows:
             branches:
               only: [ main ]
 
-  nightly_latest:
+  nightly_stable:
     jobs:
       - build:
-          stream: latest
+          stream: stable
           context: docker-publishing
           matrix:
             parameters:
@@ -126,7 +126,7 @@ workflows:
             branches:
               only: [ releases ]
       - manifest:
-          stream: latest
+          stream: stable
           context: docker-publishing
           matrix:
             parameters:
