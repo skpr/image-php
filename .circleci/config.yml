@@ -37,10 +37,10 @@ workflows:
             branches:
               ignore: [ main, releases ]
 
-  build_latest:
+  build_edge:
     jobs:
       - build:
-          stream: latest
+          stream: edge
           context: docker-publishing
           matrix:
             parameters:
@@ -50,7 +50,7 @@ workflows:
             branches:
               only: [ main ]
       - manifest:
-          stream: latest
+          stream: edge
           context: docker-publishing
           matrix:
             parameters:
@@ -83,7 +83,7 @@ workflows:
             branches:
               only: [ releases ]
 
-  nightly_latest:
+  build_latest:
     jobs:
       - build:
           stream: latest
@@ -94,9 +94,32 @@ workflows:
               executor: *platforms
           filters:
             branches:
-              only: [ main ]
+              only: [ releases ]
       - manifest:
           stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
+
+  nightly_edge:
+    jobs:
+      - build:
+          stream: edge
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              executor: *platforms
+          filters:
+            branches:
+              only: [ main ]
+      - manifest:
+          stream: edge
           context: docker-publishing
           matrix:
             parameters:
@@ -135,6 +158,30 @@ workflows:
           filters:
             branches:
               only: [ releases ]
+
+  nightly_latest:
+    jobs:
+      - build:
+          stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              executor: *platforms
+          filters:
+            branches:
+              only: [ releases ]
+      - manifest:
+          stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
+
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
