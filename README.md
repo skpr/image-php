@@ -83,20 +83,20 @@ docker.io/skpr/php-fpm:8.2-v2-edge
 docker.io/skpr/php-fpm:8.2-dev-v2-edge
 docker.io/skpr/php-cli:8.2-v2-edge
 docker.io/skpr/php-cli:8.2-dev-v2-edge
-docker.io/skpr/php-circleci:8.2-v2-test
-docker.io/skpr/php-circleci:8.2-node18-v2-test
-docker.io/skpr/php-circleci:8.2-node20-v2-test
-docker.io/skpr/php-circleci:8.2-node22-v2-test
+docker.io/skpr/php-circleci:8.2-v2-edge
+docker.io/skpr/php-circleci:8.2-node18-v2-edge
+docker.io/skpr/php-circleci:8.2-node20-v2-edge
+docker.io/skpr/php-circleci:8.2-node22-v2-edge
 
 docker.io/skpr/php:8.3-v2-edge
 docker.io/skpr/php-fpm:8.3-v2-edge
 docker.io/skpr/php-fpm:8.3-dev-v2-edge
 docker.io/skpr/php-cli:8.3-v2-edge
 docker.io/skpr/php-cli:8.3-dev-v2-edge
-docker.io/skpr/php-circleci:8.3-v2-test
-docker.io/skpr/php-circleci:8.3-node18-v2-test
-docker.io/skpr/php-circleci:8.3-node20-v2-test
-docker.io/skpr/php-circleci:8.3-node22-v2-test
+docker.io/skpr/php-circleci:8.3-v2-edge
+docker.io/skpr/php-circleci:8.3-node18-v2-edge
+docker.io/skpr/php-circleci:8.3-node20-v2-edge
+docker.io/skpr/php-circleci:8.3-node22-v2-edge
 ```
 
 ## Building
