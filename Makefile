@@ -42,7 +42,9 @@ endif
 
 ifeq ($(ARCH), amd64)
 	# Building CircleCI images.
-	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${VERSION_TAG}-${ARCH} --build-arg NODE_VERSION=14 -t ${IMAGE_CIRCLECI}-${VERSION_TAG} circleci
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${VERSION_TAG}-${ARCH} --build-arg NODE_VERSION=18 -t ${IMAGE_CIRCLECI}-node18-${VERSION_TAG} circleci
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${VERSION_TAG}-${ARCH} --build-arg NODE_VERSION=20 -t ${IMAGE_CIRCLECI}-node20-${VERSION_TAG} circleci
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg IMAGE=${IMAGE_CLI}-${VERSION_TAG}-${ARCH} --build-arg NODE_VERSION=22 -t ${IMAGE_CIRCLECI}-node22-${VERSION_TAG} circleci
 endif
 
 push: validate
@@ -57,7 +59,9 @@ push: validate
 
 ifeq ($(ARCH), amd64)
 	# Pushing CircleCI image.
-	docker push ${IMAGE_CIRCLECI}-${VERSION_TAG}
+	docker push ${IMAGE_CIRCLECI}-node18-${VERSION_TAG}
+	docker push ${IMAGE_CIRCLECI}-node20-${VERSION_TAG}
+	docker push ${IMAGE_CIRCLECI}-node22-${VERSION_TAG}
 endif
 
 manifest:
