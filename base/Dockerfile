@@ -1,9 +1,9 @@
-ARG ALPINE_VERSION=3.19
+ARG ALPINE_VERSION=3.20
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
 FROM alpine:${ALPINE_VERSION}
 
 ARG ARCH=amd64
-ARG ALPINE_VERSION=3.19
+ARG ALPINE_VERSION=3.20
 ARG PHP_VERSION=8.0
 
 ENV ALPINE_VERSION=${ALPINE_VERSION}
@@ -66,11 +66,6 @@ RUN apk --update --no-cache add \
       tesseract-ocr-dev \
       poppler-utils \
       libsodium
-
-# https://php.watch/versions/8.0/ext-json
-RUN if [[ "$PHP_VERSION" = "7.4" ]]; then \
-    apk --update --no-cache add php${PHP_VERSION}-json; \
-fi
 
 RUN export SKPRMAIL_VERSION=0.0.12 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
