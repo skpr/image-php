@@ -35,29 +35,6 @@ workflows:
             branches:
               ignore: [ main, releases ]
 
-  build_edge:
-    jobs:
-      - build:
-          stream: edge
-          context: docker-publishing
-          matrix:
-            parameters:
-              php_version: *php_versions
-              executor: *platforms
-          filters:
-            branches:
-              only: [ main ]
-      - manifest:
-          stream: edge
-          context: docker-publishing
-          matrix:
-            parameters:
-              php_version: *php_versions
-          requires: [ build ]
-          filters:
-            branches:
-              only: [ main ]
-
   build_stable:
     jobs:
       - build:
@@ -92,7 +69,7 @@ workflows:
               executor: *platforms
           filters:
             branches:
-              only: [ releases ]
+              only: [ main ]
       - manifest:
           stream: latest
           context: docker-publishing
@@ -100,36 +77,6 @@ workflows:
             parameters:
               php_version: *php_versions
           requires: [ build ]
-          filters:
-            branches:
-              only: [ releases ]
-
-  nightly_edge:
-    jobs:
-      - build:
-          stream: edge
-          context: docker-publishing
-          matrix:
-            parameters:
-              php_version: *php_versions
-              executor: *platforms
-          filters:
-            branches:
-              only: [ main ]
-      - manifest:
-          stream: edge
-          context: docker-publishing
-          matrix:
-            parameters:
-              php_version: *php_versions
-          requires: [ build ]
-          filters:
-            branches:
-              only: [ main ]
-    triggers:
-      - schedule:
-          # Scheduled build for 2am AEST nightly.
-          cron: "0 15 * * *"
           filters:
             branches:
               only: [ main ]
@@ -168,7 +115,7 @@ workflows:
               executor: *platforms
           filters:
             branches:
-              only: [ releases ]
+              only: [ main ]
       - manifest:
           stream: latest
           context: docker-publishing
@@ -178,7 +125,7 @@ workflows:
           requires: [ build ]
           filters:
             branches:
-              only: [ releases ]
+              only: [ main ]
 
     triggers:
       - schedule:
@@ -186,7 +133,7 @@ workflows:
           cron: "0 15 * * *"
           filters:
             branches:
-              only: [ releases ]
+              only: [ main ]
 
 jobs:
   build:
