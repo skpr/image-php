@@ -1,7 +1,7 @@
 ARG ALPINE_VERSION=3.20
-FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
-
 ARG PHP_VERSION=8.0
+
+FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
 FROM ghcr.io/skpr/compass:extension-${PHP_VERSION}-latest as compass
 
 FROM alpine:${ALPINE_VERSION}
