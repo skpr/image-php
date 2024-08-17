@@ -20,7 +20,7 @@ IMAGE_CIRCLECI=${REGISTRY}-circleci:${PHP_VERSION}
 
 build: validate
 	# Building base image.
-	docker build --no-cache ${COMMON_BUILD_ARGS} -t ${IMAGE_BASE}-${VERSION_TAG}-${ARCH} base
+	docker build --no-cache ${COMMON_BUILD_ARGS} --build-arg COMPASS_TAG=${IMAGE_BASE}-${VERSION_TAG}-${ARCH} -t ${IMAGE_BASE}-${VERSION_TAG}-${ARCH} base
 
 ifeq ($(ARCH), amd64)
 	# Building base image with New Relic support.
