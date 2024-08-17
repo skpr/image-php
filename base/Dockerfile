@@ -1,5 +1,9 @@
 ARG ALPINE_VERSION=3.20
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
+
+ARG PHP_VERSION=8.0
+FROM ghcr.io/skpr/compass:extension-${PHP_VERSION}-latest as compass
+
 FROM alpine:${ALPINE_VERSION}
 
 ARG ARCH=amd64
@@ -73,8 +77,8 @@ RUN export SKPRMAIL_VERSION=0.0.13 && \
 
 # Compass - Deep Observability
 ENV COMPASS_ENABLED=false
-COPY --from=ghcr.io/skpr/compass:extension-${PHP_VERSION}-latest /etc/php/conf.d/00_compass.ini /etc/php/conf.d/00_compass.ini
-COPY --from=ghcr.io/skpr/compass:extension-${PHP_VERSION}-latest /usr/lib/php/modules/compass.so /usr/lib/php/modules/compass.so
+COPY --from=compass /etc/php/conf.d/00_compass.ini /etc/php/conf.d/00_compass.ini
+COPY --from=compass /usr/lib/php/modules/compass.so /usr/lib/php/modules/compass.so
 
 # Built using an updated build approach in this fork: https://github.com/skpr/docconv
 COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
