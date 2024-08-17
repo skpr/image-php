@@ -71,6 +71,11 @@ RUN export SKPRMAIL_VERSION=0.0.13 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
 
+# Compass - Deep Observability
+ENV COMPASS_ENABLED=false
+COPY --from=ghcr.io/skpr/compass:extension-${PHP_VERSION}-latest /etc/php/conf.d/00_compass.ini /etc/php/conf.d/00_compass.ini
+COPY --from=ghcr.io/skpr/compass:extension-${PHP_VERSION}-latest /usr/lib/php/modules/compass.so /usr/lib/php/modules/compass.so
+
 # Built using an updated build approach in this fork: https://github.com/skpr/docconv
 COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
 
