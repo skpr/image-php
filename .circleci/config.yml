@@ -36,6 +36,29 @@ workflows:
             branches:
               ignore: [ main, releases ]
 
+  build_experimental:
+    jobs:
+      - build:
+          stream: experimental
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              executor: *platforms
+          filters:
+            branches:
+              only: [ experimental ]
+      - manifest:
+          stream: experimental
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ experimental ]
+
   build_stable:
     jobs:
       - build:
@@ -81,6 +104,29 @@ workflows:
           filters:
             branches:
               only: [ main ]
+
+  nightly_experimental:
+    jobs:
+      - build:
+          stream: experimental
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+              executor: *platforms
+          filters:
+            branches:
+              only: [ experimental ]
+      - manifest:
+          stream: experimental
+          context: docker-publishing
+          matrix:
+            parameters:
+              php_version: *php_versions
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ experimental ]
 
   nightly_stable:
     jobs:
