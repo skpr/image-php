@@ -2,7 +2,7 @@ ARG ALPINE_VERSION=3.20
 ARG PHP_VERSION=8.0
 
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
-FROM ghcr.io/skpr/compass:extension-${PHP_VERSION}-latest as compass
+FROM ghcr.io/skpr/compass:${PHP_VERSION}-latest as compass
 
 FROM alpine:${ALPINE_VERSION}
 
@@ -79,6 +79,10 @@ RUN export SKPRMAIL_VERSION=1.0.0 && \
 ENV COMPASS_ENABLED=false
 COPY --from=compass /etc/php/conf.d/00_compass.ini /etc/php/conf.d/00_compass.ini
 COPY --from=compass /usr/lib/php/modules/compass.so /usr/lib/php/modules/compass.so
+COPY --from=compass /usr/local/bin/compass-collector /usr/local/bin/compass-collector
+COPY --from=compass /usr/local/bin/compass-find-lib /usr/local/bin/compass-find-lib
+COPY --from=compass /usr/lib64/compass /usr/lib64/compass
+COPY --from=compass /usr/local/bin/compass-collector-entrypoint /usr/local/bin/compass-collector-entrypoint
 
 # Built using an updated build approach in this fork: https://github.com/skpr/docconv
 COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
