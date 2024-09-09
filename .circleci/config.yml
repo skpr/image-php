@@ -103,6 +103,13 @@ workflows:
           filters:
             branches:
               only: [ releases ]
+    triggers:
+      - schedule:
+          # Scheduled build for 2am AEST nightly.
+          cron: "0 15 * * *"
+          filters:
+            branches:
+              only: [ releases ]
 
   nightly_latest:
     jobs:
@@ -126,7 +133,6 @@ workflows:
           filters:
             branches:
               only: [ main ]
-
     triggers:
       - schedule:
           # Scheduled build for 2am AEST nightly.
