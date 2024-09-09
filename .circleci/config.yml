@@ -195,7 +195,7 @@ jobs:
       stream:
         type: string
     docker:
-      - image: cimg/base:2022.02
+      - image: cimg/base:2024.09
     steps:
       - checkout
       - setup_remote_docker
