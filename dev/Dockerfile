@@ -8,7 +8,8 @@ USER root
 
 RUN apk --update --no-cache add \
       php${PHP_VERSION}-xdebug \
-      php${PHP_VERSION}-spx
+      php${PHP_VERSION}-spx \
+      findutils
 
 # https://blog.blackfire.io/alpine-linux-support.html
 RUN if [ "$PHP_VERSION" != "8.3" ]; then \
