@@ -67,7 +67,7 @@ RUN apk --update --no-cache add \
       poppler-utils \
       libsodium
 
-RUN export SKPRMAIL_VERSION=0.0.13 && \
+RUN export SKPRMAIL_VERSION=0.0.14 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
 
