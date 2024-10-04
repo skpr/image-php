@@ -198,7 +198,8 @@ jobs:
       - image: cimg/base:2024.09
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: previous
       - run:
           name: Push Manifest
           command: |
