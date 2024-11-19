@@ -30,4 +30,4 @@ jobs:
 
       - name: Make
         run: |
-          make security
+          make security PHP_VERSION=8.3
