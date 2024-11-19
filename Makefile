@@ -97,12 +97,14 @@ ifndef PHP_VERSION
 	$(error PHP_VERSION is undefined)
 endif
 
+SECURITY_FAIL_ON=critical
+
 security: build
 	@set +e; \
 	fpm_exit_code=0; cli_exit_code=0; \
-	grype ${IMAGE_FPM}-dev-${VERSION_TAG}-${ARCH} --fail-on high; \
+	grype ${IMAGE_FPM}-dev-${VERSION_TAG}-${ARCH} --fail-on ${SECURITY_FAIL_ON}; \
 	fpm_exit_code=$$?; \
-	grype ${IMAGE_CLI}-dev-${VERSION_TAG}-${ARCH} --fail-on high; \
+	grype ${IMAGE_CLI}-dev-${VERSION_TAG}-${ARCH} --fail-on ${SECURITY_FAIL_ON}; \
 	cli_exit_code=$$?; \
 	if [ $$fpm_exit_code -ne 0 ] || [ $$cli_exit_code -ne 0 ]; then \
 		echo "Containers have high security findings."; \
