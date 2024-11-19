@@ -97,4 +97,23 @@ ifndef PHP_VERSION
 	$(error PHP_VERSION is undefined)
 endif
 
+security: build
+	@set +e; \
+	fpm_exit_code=0; cli_exit_code=0; \
+	grype ${IMAGE_FPM}-dev-${VERSION_TAG}-${ARCH} --fail-on high; \
+	fpm_exit_code=$$?; \
+	grype ${IMAGE_CLI}-dev-${VERSION_TAG}-${ARCH} --fail-on high; \
+	cli_exit_code=$$?; \
+	if [ $$fpm_exit_code -ne 0 ] || [ $$cli_exit_code -ne 0 ]; then \
+		echo "One or more commands failed."; \
+		if [ $$fpm_exit_code -ne 0 ]; then \
+			echo "FPM image has high security findings."; \
+		fi; \
+		if [ $$cli_exit_code -ne 0 ]; then \
+			echo "CLI image has high security findings."; \
+		fi; \
+	else \
+		echo "No high security findings."; \
+	fi
+
 .PHONY: *
