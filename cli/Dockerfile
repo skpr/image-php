@@ -39,11 +39,8 @@ RUN curl -sS https://getcomposer.org/download/latest-2.x/composer.phar -o /usr/l
     chmod +x /usr/local/bin/composer && \
     ln -sv /usr/local/bin/composer /usr/local/bin/composer2
 
-# A lightweight crond for local development environments. Also leveraged the Skpr Preview environments.
-RUN curl -sSL https://github.com/skpr/crond/releases/download/v0.0.2/skpr-crond_0.0.2_linux_${ARCH}.tar.gz -o /tmp/skpr-crond.tar.gz && \
-    tar -zxvf /tmp/skpr-crond.tar.gz skpr-crond && \
-    mv skpr-crond /usr/local/bin/skpr-crond && \
-    rm -f /tmp/skpr-crond.tar.gz
+# A lightweight crond for local development environments.
+COPY --from=ghcr.io/skpr/crond:main /usr/local/bin/skpr-crond /usr/local/bin/skpr-crond
 
 ADD drush /etc/drush
 
