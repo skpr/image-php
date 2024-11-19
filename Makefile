@@ -108,9 +108,11 @@ security: build
 		echo "One or more commands failed."; \
 		if [ $$fpm_exit_code -ne 0 ]; then \
 			echo "FPM image has high security findings."; \
+			exit 1; \
 		fi; \
 		if [ $$cli_exit_code -ne 0 ]; then \
 			echo "CLI image has high security findings."; \
+			exit 1; \
 		fi; \
 	else \
 		echo "No high security findings."; \

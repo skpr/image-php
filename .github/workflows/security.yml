@@ -28,6 +28,6 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
 
-      - name: Make
+      - name: Build and Scan
         run: |
           make security PHP_VERSION=8.3
