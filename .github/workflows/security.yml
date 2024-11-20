@@ -1,0 +1,33 @@
+name: Security
+
+on:
+  schedule:
+    - cron: "15 21 * * 2,3" # UTC Wed,Thurs
+  workflow_dispatch: ~
+  push:
+    branches:
+      - security # This is a branch that we can push to for testing.
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      # https://github.com/GoogleContainerTools/container-structure-test?tab=readme-ov-file#linux
+      - name: Install Container Structure Tests
+        run: |
+          curl -LO https://github.com/GoogleContainerTools/container-structure-test/releases/latest/download/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+
+      # https://github.com/anchore/grype?tab=readme-ov-file#recommended
+      - name: Install Grype
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Build and Scan
+        run: |
+          make security PHP_VERSION=8.3
