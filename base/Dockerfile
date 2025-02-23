@@ -1,5 +1,9 @@
 ARG ALPINE_VERSION=3.20
+ARG PHP_VERSION=8.0
+
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
+FROM ghcr.io/skpr/compass:v1.3.0-php${PHP_VERSION} as compass
+
 FROM alpine:${ALPINE_VERSION}
 
 ARG ARCH=amd64
@@ -70,6 +74,11 @@ RUN apk --update --no-cache add \
 RUN export SKPRMAIL_VERSION=1.0.0 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
+
+# https://github.com/skpr/compass
+ENV COMPASS_ENABLED=false
+COPY --from=compass /etc/php/conf.d/00_compass.ini /etc/php/conf.d/00_compass.ini
+COPY --from=compass /usr/lib/php/modules/compass.so /usr/lib/php/modules/compass.so
 
 # Built using an updated build approach in this fork: https://github.com/skpr/docconv
 COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
