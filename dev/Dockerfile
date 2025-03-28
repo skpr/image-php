@@ -8,7 +8,8 @@ USER root
 
 RUN apk --update --no-cache add \
       php${PHP_VERSION}-xdebug \
-      php${PHP_VERSION}-spx
+      php${PHP_VERSION}-spx \
+      findutils
 
 COPY --chown=skpr:skpr etc /etc
 
