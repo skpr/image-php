@@ -39,6 +39,7 @@ RUN apk --update --no-cache add \
       php${PHP_VERSION}-fileinfo \
       php${PHP_VERSION}-gd \
       php${PHP_VERSION}-mbstring \
+      php${PHP_VERSION}-intl \
       php${PHP_VERSION}-opcache \
       php${PHP_VERSION}-openssl \
       php${PHP_VERSION}-pcntl \
