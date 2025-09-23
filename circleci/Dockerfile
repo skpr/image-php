@@ -62,15 +62,32 @@ RUN apk --update --no-cache add bash \
 COPY --chown=skpr:skpr --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY --chown=skpr:skpr --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --chown=skpr:skpr --from=node /opt /opt
-RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm-unsafe && \
   ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx && \
-  ln -s `find /opt -name yarn|head -1` /usr/local/bin/yarn && \
+  ln -s /usr/local/lib/node_modules/corepack/dist/corepack.js /usr/local/bin/corepack && \
+  ln -s `find /opt -name yarn|head -1` /usr/local/bin/yarn-unsafe && \
   ln -s `find /opt -name yarnpkg|head -1` /usr/local/bin/yarnpkg && \
   node --version && \
-  npm --version && \
+  npm-unsafe --version && \
   npx --version && \
-  yarn --version && \
+  yarn-unsafe --version && \
   yarnpkg --version
+
+# Install pnpm. Recommeded installation path.
+# See also:
+# - https://pnpm.io/docker
+RUN corepack enable && \
+    corepack prepare pnpm@10 --activate && \
+    echo "PNPM Version during build:" && \
+    pnpm --version
+
+# Replace npm with a wrapper script to enforce security.
+ADD --chown=skpr:skpr node/bin/npm-wrapper /usr/local/bin/npm
+RUN chmod +x /usr/local/bin/npm
+
+# Replace yarn with a wrapper script to enforce security.
+ADD --chown=skpr:skpr node/bin/yarn-wrapper /usr/local/bin/yarn
+RUN chmod +x /usr/local/bin/yarn
 
 RUN apk --update --no-cache add ruby ruby-dev && \
     gem install -N bundler:2.4
