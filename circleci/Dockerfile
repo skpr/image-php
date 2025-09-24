@@ -73,14 +73,6 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm-unsa
   yarn-unsafe --version && \
   yarnpkg --version
 
-# Install pnpm. Recommeded installation path.
-# See also:
-# - https://pnpm.io/docker
-RUN corepack enable && \
-    corepack prepare pnpm@10 --activate && \
-    echo "PNPM Version during build:" && \
-    pnpm --version
-
 # Replace npm with a wrapper script to enforce security.
 ADD --chown=skpr:skpr node/bin/npm-wrapper /usr/local/bin/npm
 RUN chmod +x /usr/local/bin/npm
@@ -88,6 +80,10 @@ RUN chmod +x /usr/local/bin/npm
 # Replace yarn with a wrapper script to enforce security.
 ADD --chown=skpr:skpr node/bin/yarn-wrapper /usr/local/bin/yarn
 RUN chmod +x /usr/local/bin/yarn
+
+# Install pnpm globally using the unsafe npm.
+# @todo, To be replaced with APK package when available (We want 10+).
+RUN npm-unsafe install -g pnpm@10
 
 RUN apk --update --no-cache add ruby ruby-dev && \
     gem install -N bundler:2.4
