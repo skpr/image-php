@@ -60,7 +60,6 @@ push: validate
 ifeq ($(ARCH), amd64)
 	# Pushing CircleCI image.
 	docker push ${IMAGE_CIRCLECI}-${VERSION_TAG}
-	docker push ${IMAGE_CIRCLECI}-node18-${VERSION_TAG}
 	docker push ${IMAGE_CIRCLECI}-node20-${VERSION_TAG}
 	docker push ${IMAGE_CIRCLECI}-node22-${VERSION_TAG}
 endif
