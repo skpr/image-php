@@ -1,5 +1,4 @@
-ARG IMAGE=skpr/php:8.0-1.x
-FROM ${IMAGE}
+FROM base
 ARG PHP_VERSION=8.0
 
 RUN apk --update --no-cache add \
