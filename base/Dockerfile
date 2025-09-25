@@ -1,10 +1,10 @@
 ARG ALPINE_VERSION=3.21
 ARG PHP_VERSION=8.0
 
-FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
-FROM ghcr.io/skpr/compass:v1.7.0-php${PHP_VERSION} as compass
+FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} AS docconv
+FROM ghcr.io/skpr/compass:v1.7.0-php${PHP_VERSION} AS compass
 
-FROM alpine:${ALPINE_VERSION}
+FROM base
 
 ARG ARCH=amd64
 ARG ALPINE_VERSION=3.21
@@ -13,7 +13,7 @@ ARG PHP_VERSION=8.0
 ENV ALPINE_VERSION=${ALPINE_VERSION}
 ENV PHP_MEMORY_LIMIT=128M
 ENV PHP_LOG_LIMIT=4096
-ENV PATH "$PATH:/data/bin"
+ENV PATH="$PATH:/data/bin"
 
 RUN apk add util-linux ca-certificates
 RUN adduser -D -u 1000 skpr
