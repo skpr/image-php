@@ -4,7 +4,7 @@ FROM alpine:${ALPINE_VERSION} AS redis-cli
 
 RUN apk add redis
 
-FROM base
+FROM from_image AS base
 
 ENV PHP_MEMORY_LIMIT=256M
 
@@ -39,4 +39,11 @@ ADD drush /etc/drush
 
 USER skpr
 
+# Run the test stage to verify the image.
+FROM base AS test
+COPY --from=ghcr.io/goss-org/goss:latest /usr/bin/goss /usr/bin/goss
+ADD goss.yml /tmp/goss.yml
+RUN goss --gossfile /tmp/goss.yml validate
+
+FROM base AS run
 CMD ["bash"]

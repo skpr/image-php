@@ -1,0 +1,30 @@
+command:
+  composer:
+    exec: "composer"
+    exit-status: 0
+    stdout:
+      - "Available commands"
+
+  composer2:
+    exec: "composer2"
+    exit-status: 0
+    stdout:
+      - "Available commands"
+
+  skpr-crond:
+    exec: "skpr-crond --help"
+    exit-status: 0
+
+  redis-cli:
+    exec: "redis-cli --version"
+    exit-status: 0
+
+  less:
+    exec: "less --version"
+    exit-status: 0
+    stdout:
+      - "Mark Nudelman"
+
+  php:
+    exec: "php -m"
+    exit-status: 0

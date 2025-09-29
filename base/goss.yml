@@ -1,0 +1,18 @@
+command:
+  docconv:
+    # capture both stdout and stderr to simplify matching
+    exec: "docconv --help"
+    exit-status: 0
+    stderr:
+      - "Usage of docconv"
+
+  iconv:
+    exec: "php -r \"iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', 'šěýčíéáýřčíšýíščř');\""
+    exit-status: 0
+    stdout:
+      not:
+        contain-substring: "Wrong charset"
+
+  skprmail:
+    exec: "skprmail --help"
+    exit-status: 0

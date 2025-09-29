@@ -1,4 +1,4 @@
-FROM base
+FROM from_image AS base
 ARG PHP_VERSION=8.0
 
 RUN apk --update --no-cache add \
@@ -27,4 +27,12 @@ ENV PHP_FPM_PORT=9000 \
     PHP_FPM_MAX_REQUESTS=500 \
     PHP_FPM_REQUEST_TIMEOUT=60
 
+# Run the test stage to verify the image.
+FROM base AS test
+COPY --from=ghcr.io/goss-org/goss:latest /usr/bin/goss /usr/bin/goss
+ADD goss.yml /tmp/goss.yml
+RUN goss --gossfile /tmp/goss.yml validate
+
+# The final stage which is used to run the image.
+FROM base AS run
 CMD ["php-fpm", "-F"]

@@ -4,7 +4,7 @@ ARG PHP_VERSION=8.0
 
 FROM node:${NODE_VERSION}-alpine AS node
 
-FROM base
+FROM from_image
 
 ARG TARGETARCH
 ARG PHP_VERSION=8.0

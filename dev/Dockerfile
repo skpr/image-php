@@ -1,7 +1,5 @@
-FROM base
+FROM from_image
 ARG PHP_VERSION=8.0
-
-ARG ARCH=amd64
 
 USER root
 
@@ -18,4 +16,3 @@ RUN mkdir -p /tmp/xdebug && \
 VOLUME /tmp/xdebug
 
 USER skpr
-

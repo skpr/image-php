@@ -3,7 +3,7 @@ variable "PHP_VERSION" {
 }
 
 variable "ALPINE_VERSION" {
-  default = "3.20"
+  default = "3.21"
 }
 
 variable "STREAM" {
@@ -12,6 +12,23 @@ variable "STREAM" {
 
 variable "VERSION" {
   default = "v2"
+}
+
+variable "PLATFORMS" {
+  default = ["linux/amd64", "linux/arm64"]
+}
+
+variable "REGISTRIES" {
+  default = ["docker.io", "ghcr.io"]
+}
+
+# Common target: Everything inherits from this
+target "_common" {
+  platforms = PLATFORMS
+  attest = [
+    "type=provenance,mode=max",
+    "type=sbom",
+  ]
 }
 
 group "default" {
@@ -23,125 +40,107 @@ group "default" {
     "cli-dev",
     "circleci-node-20",
     "circleci-node-22",
+    "test",
   ]
 }
 
 target "base" {
-  context = "base"
+  inherits = ["_common"]
+  context  = "base"
 
   contexts = {
-    base = "docker-image://docker.io/alpine:${ALPINE_VERSION}"
+    from_image = "docker-image://docker.io/alpine:${ALPINE_VERSION}"
   }
 
   args = {
     ALPINE_VERSION = ALPINE_VERSION
-    PHP_VERSION = PHP_VERSION
+    PHP_VERSION    = PHP_VERSION
   }
 
-  platforms = [
-    "linux/amd64",
-    "linux/arm64",
-  ]
-
   tags = [
-    "docker.io/skpr/php:${PHP_VERSION}-${VERSION}-${STREAM}",
-    "ghrc.io/skpr/php:${PHP_VERSION}-${VERSION}-${STREAM}",
-  ] 
+    for r in REGISTRIES :
+    "${r}/skpr/php:${PHP_VERSION}-${VERSION}-${STREAM}"
+  ]
 }
 
 target "fpm" {
-  context = "fpm"
+  inherits = ["_common"]
+  context  = "fpm"
 
   contexts = {
-    base = "target:base"
+    from_image = "target:base"
   }
 
   args = {
     PHP_VERSION = PHP_VERSION
   }
 
-  platforms = [
-    "linux/amd64",
-    "linux/arm64",
-  ]
-
   tags = [
-    "docker.io/skpr/php-fpm:${PHP_VERSION}-${VERSION}-${STREAM}",
-    "ghrc.io/skpr/php-fpm:${PHP_VERSION}-${VERSION}-${STREAM}",
-  ] 
+    for r in REGISTRIES :
+    "${r}/skpr/php-fpm:${PHP_VERSION}-${VERSION}-${STREAM}"
+  ]
 }
 
 target "fpm-dev" {
-  context = "dev"
+  inherits = ["_common"]
+  context  = "dev"
 
   contexts = {
-    base = "target:fpm"
+    from_image = "target:fpm"
   }
 
   args = {
     PHP_VERSION = PHP_VERSION
   }
 
-  platforms = [
-    "linux/amd64",
-    "linux/arm64",
-  ]
-
   tags = [
-    "docker.io/skpr/php-fpm:${PHP_VERSION}-dev-${VERSION}-${STREAM}",
-    "ghrc.io/skpr/php-fpm:${PHP_VERSION}-dev-${VERSION}-${STREAM}",
-  ] 
+    for r in REGISTRIES :
+    "${r}/skpr/php-fpm:${PHP_VERSION}-dev-${VERSION}-${STREAM}"
+  ]
 }
 
 target "cli" {
-  context = "cli"
+  inherits = ["_common"]
+  context  = "cli"
 
   contexts = {
-    base = "target:base"
+    from_image = "target:base"
   }
 
   args = {
     ALPINE_VERSION = ALPINE_VERSION
   }
 
-  platforms = [
-    "linux/amd64",
-    "linux/arm64",
-  ]
-
   tags = [
-    "docker.io/skpr/php-cli:${PHP_VERSION}-${VERSION}-${STREAM}",
-    "ghrc.io/skpr/php-cli:${PHP_VERSION}-${VERSION}-${STREAM}",
-  ] 
+    for r in REGISTRIES :
+    "${r}/skpr/php-cli:${PHP_VERSION}-${VERSION}-${STREAM}"
+  ]
 }
 
 target "cli-dev" {
-  context = "dev"
+  inherits = ["_common"]
+  context  = "dev"
 
   contexts = {
-    base = "target:cli"
+    from_image = "target:cli"
   }
 
   args = {
     PHP_VERSION = PHP_VERSION
   }
 
-  platforms = [
-    "linux/amd64",
-    "linux/arm64",
-  ]
-
   tags = [
-    "docker.io/skpr/php-cli:${PHP_VERSION}-dev-${VERSION}-${STREAM}",
-    "ghrc.io/skpr/php-cli:${PHP_VERSION}-dev-${VERSION}-${STREAM}",
-  ] 
+    for r in REGISTRIES :
+    "${r}/skpr/php-cli:${PHP_VERSION}-dev-${VERSION}-${STREAM}"
+  ]
 }
 
 target "circleci-node-20" {
-  context = "circleci"
+  inherits = ["_common"]
+  context  = "circleci"
 
   contexts = {
-    base = "target:cli"
+    from_image = "target:cli"
   }
 
   args = {
@@ -149,22 +148,18 @@ target "circleci-node-20" {
     NODE_VERSION = 20
   }
 
-  platforms = [
-    "linux/amd64",
-    "linux/arm64",
-  ]
-
   tags = [
-    "docker.io/skpr/php-circleci:${PHP_VERSION}-node20-${VERSION}-${STREAM}",
-    "ghrc.io/skpr/php-circleci:${PHP_VERSION}-node20-${VERSION}-${STREAM}",
-  ] 
+    for r in REGISTRIES :
+    "${r}/skpr/php-circleci:${PHP_VERSION}-node20-${VERSION}-${STREAM}"
+  ]
 }
 
 target "circleci-node-22" {
-  context = "circleci"
+  inherits = ["_common"]
+  context  = "circleci"
 
   contexts = {
-    base = "target:cli"
+    from_image = "target:cli"
   }
 
   args = {
@@ -172,13 +167,24 @@ target "circleci-node-22" {
     NODE_VERSION = 22
   }
 
-  platforms = [
-    "linux/amd64",
-    "linux/arm64",
-  ]
-
   tags = [
-    "docker.io/skpr/php-circleci:${PHP_VERSION}-node22-${VERSION}-${STREAM}",
-    "ghrc.io/skpr/php-circleci:${PHP_VERSION}-node22-${VERSION}-${STREAM}",
-  ] 
+    for r in REGISTRIES :
+    "${r}/skpr/php-circleci:${PHP_VERSION}-node22-${VERSION}-${STREAM}"
+  ]
+}
+
+target "test" {
+  matrix = {
+    variant = ["base", "fpm", "cli"]
+  }
+
+  name = "${variant}-test"
+
+  inherits = [variant]
+
+  # Run this stage from the Dockerfile.
+  target = "test"
+
+  # Only build the test target locally.
+  output = ["type=cacheonly"]
 }
