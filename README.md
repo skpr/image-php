@@ -27,8 +27,6 @@ REGISTRY=docker.io
 STREAM=stable
 ```
 
-**Stable**
-
 ```
 REGISTRY/skpr/php:8.2-v2-STREAM
 REGISTRY/skpr/php-fpm:8.2-v2-STREAM
