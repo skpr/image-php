@@ -25,10 +25,6 @@ variable "REGISTRIES" {
 # Common target: Everything inherits from this
 target "_common" {
   platforms = PLATFORMS
-  attest = [
-    "type=provenance,mode=max",
-    "type=sbom",
-  ]
 }
 
 group "default" {
