@@ -1,19 +1,19 @@
 ARG ALPINE_VERSION=3.21
 ARG PHP_VERSION=8.0
 
-FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} as docconv
-FROM ghcr.io/skpr/compass:v1.7.0-php${PHP_VERSION} as compass
+FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} AS docconv
+FROM ghcr.io/skpr/compass:v1.7.0-php${PHP_VERSION} AS compass
 
-FROM alpine:${ALPINE_VERSION}
+FROM from_image AS base
 
-ARG ARCH=amd64
+ARG TARGETARCH
 ARG ALPINE_VERSION=3.21
 ARG PHP_VERSION=8.0
 
 ENV ALPINE_VERSION=${ALPINE_VERSION}
 ENV PHP_MEMORY_LIMIT=128M
 ENV PHP_LOG_LIMIT=4096
-ENV PATH "$PATH:/data/bin"
+ENV PATH="$PATH:/data/bin"
 
 RUN apk add util-linux ca-certificates
 RUN adduser -D -u 1000 skpr
@@ -73,7 +73,7 @@ RUN apk --update --no-cache add \
       libsodium
 
 RUN export SKPRMAIL_VERSION=1.0.1 && \
-    curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${ARCH} -o /usr/local/bin/skprmail && \
+    curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${TARGETARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
 
 # https://github.com/skpr/compass
@@ -92,3 +92,13 @@ RUN cat /usr/local/share/ca-certificates/skpr-alb-internal.crt >> /etc/ssl/certs
 
 # Drush uses /tmp.
 VOLUME /tmp
+
+# Run the test stage to verify the image.
+FROM base AS test
+COPY --from=ghcr.io/goss-org/goss:latest /usr/bin/goss /usr/bin/goss
+ADD goss.yml /tmp/goss.yml
+RUN goss --gossfile /tmp/goss.yml validate
+
+# This is our run image.
+FROM base AS run
+CMD ["sh"]

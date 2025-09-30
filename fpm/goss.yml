@@ -1,0 +1,7 @@
+command:
+  check-configuration:
+    exec: "mkdir /data/app && php-fpm --test"
+    exit-status: 0
+    stdout:
+      not:
+        contain-substring: "WARNING"

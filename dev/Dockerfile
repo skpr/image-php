@@ -1,8 +1,5 @@
-ARG IMAGE=skpr/php:8.0-1.x
-FROM ${IMAGE}
+FROM from_image
 ARG PHP_VERSION=8.0
-
-ARG ARCH=amd64
 
 USER root
 
@@ -12,11 +9,10 @@ RUN apk --update --no-cache add \
 
 COPY --chown=skpr:skpr etc /etc
 
-ENV PHP_FPM_REQUEST_TIMEOUT 600
+ENV PHP_FPM_REQUEST_TIMEOUT=600
 
 RUN mkdir -p /tmp/xdebug && \
     chown -R skpr:skpr /tmp/xdebug
 VOLUME /tmp/xdebug
 
 USER skpr
-

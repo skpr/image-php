@@ -1,19 +1,12 @@
-ARG IMAGE=skpr/php:8.0-1.x
 ARG ALPINE_VERSION=3.21
-ARG ARCH=amd64
 
-FROM alpine:${ALPINE_VERSION} as redis-cli
+FROM alpine:${ALPINE_VERSION} AS redis-cli
 
 RUN apk add redis
 
-FROM ${IMAGE}
-
-ARG ARCH=amd64
-ARG PHP_VERSION=8.0
+FROM from_image AS base
 
 ENV PHP_MEMORY_LIMIT=256M
-
-ENV PATH=$PATH:$EXTRA_PATH
 
 ENV PS1='\u@\h:\W \$ '
 
@@ -46,4 +39,11 @@ ADD drush /etc/drush
 
 USER skpr
 
+# Run the test stage to verify the image.
+FROM base AS test
+COPY --from=ghcr.io/goss-org/goss:latest /usr/bin/goss /usr/bin/goss
+ADD goss.yml /tmp/goss.yml
+RUN goss --gossfile /tmp/goss.yml validate
+
+FROM base AS run
 CMD ["bash"]
