@@ -169,6 +169,25 @@ target "circleci-node-22" {
   ]
 }
 
+target "circleci-node-24" {
+  inherits = ["_common"]
+  context  = "circleci"
+
+  contexts = {
+    from_image = "target:cli"
+  }
+
+  args = {
+    PHP_VERSION = PHP_VERSION
+    NODE_VERSION = 24
+  }
+
+  tags = [
+    for r in REGISTRIES :
+    "${r}/skpr/php-circleci:${PHP_VERSION}-node24-${VERSION}-${STREAM}"
+  ]
+}
+
 target "test" {
   matrix = {
     variant = ["base", "fpm", "cli"]
