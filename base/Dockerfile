@@ -72,7 +72,7 @@ RUN apk --update --no-cache add \
       libsodium
 
 RUN if [ "${PHP_VERSION}" != "8.5" ]; then \
-        apk add --no-cache php${PHP_VERSION}-opcache \; \
+        apk add --no-cache php${PHP_VERSION}-opcache; \
     fi
 
 RUN export SKPRMAIL_VERSION=1.0.1 && \
