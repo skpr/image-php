@@ -3,11 +3,13 @@ ARG PHP_VERSION=8.0
 
 USER root
 
+RUN apk --update --no-cache add \
+        php${PHP_VERSION}-spx;
+
 RUN if [ "${PHP_VERSION}" != "8.5" ]; then \
         apk --update --no-cache add \
-              php${PHP_VERSION}-xdebug \
-              php${PHP_VERSION}-spx; \
-    fi
+            php${PHP_VERSION}-xdebug; \
+    fi \
 
 COPY --chown=skpr:skpr etc /etc
 
