@@ -2,7 +2,7 @@ ARG ALPINE_VERSION=3.21
 ARG PHP_VERSION=8.0
 
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} AS docconv
-FROM ghcr.io/skpr/compass:v1.7.0-php${PHP_VERSION} AS compass
+FROM ghcr.io/skpr/compass-extension:v1.10.0-php${PHP_VERSION} AS compass
 
 FROM from_image AS base
 
@@ -40,7 +40,6 @@ RUN apk --update --no-cache add \
       php${PHP_VERSION}-gd \
       php${PHP_VERSION}-mbstring \
       php${PHP_VERSION}-intl \
-      php${PHP_VERSION}-opcache \
       php${PHP_VERSION}-openssl \
       php${PHP_VERSION}-pcntl \
       php${PHP_VERSION}-pdo \
@@ -71,6 +70,10 @@ RUN apk --update --no-cache add \
       tesseract-ocr-dev \
       poppler-utils \
       libsodium
+
+RUN if [ "${PHP_VERSION}" != "8.5" ]; then \
+        apk add --no-cache php${PHP_VERSION}-opcache; \
+    fi
 
 RUN export SKPRMAIL_VERSION=1.0.1 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${TARGETARCH} -o /usr/local/bin/skprmail && \
