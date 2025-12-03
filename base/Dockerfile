@@ -40,7 +40,6 @@ RUN apk --update --no-cache add \
       php${PHP_VERSION}-gd \
       php${PHP_VERSION}-mbstring \
       php${PHP_VERSION}-intl \
-      php${PHP_VERSION}-opcache \
       php${PHP_VERSION}-openssl \
       php${PHP_VERSION}-pcntl \
       php${PHP_VERSION}-pdo \
@@ -71,6 +70,10 @@ RUN apk --update --no-cache add \
       tesseract-ocr-dev \
       poppler-utils \
       libsodium
+
+RUN if [ "${PHP_VERSION}" != "8.5" ]; then \
+        apk add --no-cache php${PHP_VERSION}-opcache \; \
+    fi
 
 RUN export SKPRMAIL_VERSION=1.0.1 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${TARGETARCH} -o /usr/local/bin/skprmail && \
