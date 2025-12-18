@@ -45,7 +45,7 @@ target "base" {
   context  = "base"
 
   contexts = {
-    from_image = "docker-image://docker.io/alpine:${ALPINE_VERSION}"
+    from_image = "docker-image://dhi.io/alpine-base:${ALPINE_VERSION}"
   }
 
   args = {
