@@ -1,7 +1,7 @@
 ARG ALPINE_VERSION=3.21
 ARG PHP_VERSION=8.0
 
-FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} AS docconv
+#FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} AS docconv
 FROM ghcr.io/skpr/compass-extension:v1.10.0-php${PHP_VERSION} AS compass
 
 FROM from_image AS base
@@ -85,7 +85,7 @@ COPY --from=compass /etc/php/conf.d/00_compass.ini /etc/php/conf.d/00_compass.in
 COPY --from=compass /usr/lib/php/modules/compass.so /usr/lib/php/modules/compass.so
 
 # Built using an updated build approach in this fork: https://github.com/skpr/docconv
-COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
+#COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv
 
 ADD conf.d/01_apcu.ini /etc/php/conf.d/01_apcu.ini
 ADD conf.d/50_overrides.ini /etc/php/conf.d/50_overrides.ini
