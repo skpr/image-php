@@ -58,6 +58,13 @@ jobs:
           vuln-type: os,library
           exit-code: '0' # Ensure we are always reporting
 
+      - name: 📄 Verify SARIF exists
+        if: always()
+        run: |
+          set -euo pipefail
+          ls -lah trivy-results.sarif
+          head -n 40 trivy-results.sarif || true
+
       - name: ⬆️ Upload Trivy SARIF to Code Scanning
         if: always()
         uses: github/codeql-action/upload-sarif@v4
