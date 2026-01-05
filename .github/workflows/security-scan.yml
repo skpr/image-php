@@ -1,8 +1,6 @@
 name: 🛡️ Security Scan (Latest)
 
 on:
-  push:
-    branches: [ security-scan-latest ]
   workflow_dispatch: ~
   schedule:
     - cron: '0 14 * * *'
@@ -57,13 +55,6 @@ jobs:
           ignore-unfixed: true
           vuln-type: os,library
           exit-code: '0' # Ensure we are always reporting
-
-      - name: 📄 Verify SARIF exists
-        if: always()
-        run: |
-          set -euo pipefail
-          ls -lah trivy-results.sarif
-          head -n 40 trivy-results.sarif || true
 
       - name: ⬆️ Upload Trivy SARIF to Code Scanning
         if: always()
