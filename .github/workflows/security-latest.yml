@@ -1,0 +1,66 @@
+name: 🛡️ Security Scan (Latest)
+
+on:
+  push:
+    branches: [ security-scan-latest ]
+  workflow_dispatch: ~
+  schedule:
+    - cron: '0 14 * * *'
+
+permissions:
+  contents: read
+  packages: read
+  security-events: write
+
+jobs:
+  trivy_scan:
+    name: Trivy scan container images
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.2', '8.3', '8.4', '8.5' ]
+        image:
+          - php-fpm
+          - php-cli
+        variant:
+          - v2-latest
+          - dev-v2-latest
+
+    steps:
+      - name: 🔑 Log in to the GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🧮 Resolve image ref
+        id: image
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="ghcr.io/skpr/${{ matrix.image }}:${{ matrix.php }}-${{ matrix.variant }}"
+          echo "ref=${IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "Resolved image: ${IMAGE}"
+
+      - name: 📥 Pull image
+        run: docker pull "${{ steps.image.outputs.ref }}"
+
+      - name: 🔍 Trivy scan (SARIF)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ steps.image.outputs.ref }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          vuln-type: os,library
+          exit-code: '1'
+
+      - name: ⬆️ Upload Trivy SARIF to Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy-${{ matrix.php }}-${{ matrix.image }}-${{ matrix.variant }}
