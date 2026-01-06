@@ -1,0 +1,44 @@
+name: 🛡️ Security Scan (Latest)
+
+on:
+  workflow_dispatch: ~
+  schedule:
+    - cron: "0 14 * * *"
+
+permissions:
+  contents: read
+  packages: read
+  security-events: write
+
+jobs:
+  trivy_scan:
+    name: Trivy scan container images
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ "8.2", "8.3", "8.4", "8.5" ]
+        image: [ "php-fpm", "php-cli" ]
+        variant: [ "v2-latest", "dev-v2-latest" ]
+
+    steps:
+      - name: 🔑 Log in to the GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🧮 Resolve image ref
+        id: image
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="ghcr.io/skpr/${{ matrix.image }}:${{ matrix.php }}-${{ matrix.variant }}"
+          echo "ref=${IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "Resolved image: ${IMAGE}"
+
+      - name: 🛡️ Scan + upload (Trivy SARIF)
+        uses: skpr/image-scan-action@v1
+        with:
+          image-ref: ${{ steps.image.outputs.ref }}
