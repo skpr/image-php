@@ -2,7 +2,7 @@ name: 🏗️ Build and Push Latest
 
 on:
   push:
-    branches: [ main ]
+    branches: [ releases ]
   workflow_dispatch: ~
   schedule:
     # At 14:00 UTC every day
