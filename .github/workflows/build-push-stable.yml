@@ -14,5 +14,5 @@ jobs:
     with:
       stream: latest
       push: true
-      branch: main
+      branch: releases
     secrets: inherit
