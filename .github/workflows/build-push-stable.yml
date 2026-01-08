@@ -2,7 +2,7 @@ name: 🏗️ Build and Push Latest
 
 on:
   push:
-    branches: [ main ]
+    branches: [ releases ]
   workflow_dispatch: ~
   schedule:
     # At 14:00 UTC every day
@@ -14,5 +14,5 @@ jobs:
     with:
       stream: latest
       push: true
-      branch: main
+      branch: releases
     secrets: inherit
