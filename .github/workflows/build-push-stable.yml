@@ -12,7 +12,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-push.yml
     with:
-      stream: latest
+      stream: stable
       push: true
       branch: releases
     secrets: inherit
