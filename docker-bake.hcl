@@ -3,7 +3,7 @@ variable "PHP_VERSION" {
 }
 
 variable "ALPINE_VERSION" {
-  default = "3.21"
+  default = "3.20"
 }
 
 variable "STREAM" {
