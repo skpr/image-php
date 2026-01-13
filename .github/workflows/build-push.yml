@@ -69,3 +69,8 @@ jobs:
           STREAM: ${{ inputs.stream }}
         with:
           push: ${{ inputs.push }}
+          set: |
+            *.no-cache=true
+            *.pull=true
+            *.cache-from=
+            *.cache-to=
