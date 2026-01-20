@@ -27,9 +27,3 @@ jobs:
         env:
           PHP_VERSION: ${{ matrix.php }}
           STREAM: ${{ env.stream }}
-        with:
-          set: |
-            *.no-cache=true
-            *.pull=true
-            *.cache-from=
-            *.cache-to=
