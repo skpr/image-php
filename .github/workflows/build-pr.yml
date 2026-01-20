@@ -28,4 +28,4 @@ jobs:
           PHP_VERSION: ${{ matrix.php }}
           STREAM: ${{ env.stream }}
         with:
-          source: ${{ github.workspace }}
+          source: .

@@ -69,5 +69,5 @@ jobs:
           PHP_VERSION: ${{ matrix.php }}
           STREAM: ${{ inputs.stream }}
         with:
-          source: ${{ github.workspace }}
+          source: .
           push: ${{ inputs.push }}
