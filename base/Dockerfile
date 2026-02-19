@@ -75,7 +75,7 @@ RUN if [ "${PHP_VERSION}" != "8.5" ]; then \
         apk add --no-cache php${PHP_VERSION}-opcache; \
     fi
 
-RUN export SKPRMAIL_VERSION=1.0.2 && \
+RUN export SKPRMAIL_VERSION=1.0.3 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${TARGETARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
 
