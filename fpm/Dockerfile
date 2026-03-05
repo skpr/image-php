@@ -2,6 +2,7 @@ FROM from_image AS base
 ARG PHP_VERSION=8.0
 
 RUN apk --update --no-cache add \
+      php${PHP_VERSION}-compass \
       php${PHP_VERSION}-fpm
 
 COPY conf.d/50_fpm.ini /etc/php/conf.d/50_fpm.ini
@@ -32,6 +33,9 @@ FROM base AS test
 COPY --from=ghcr.io/goss-org/goss:latest /usr/bin/goss /usr/bin/goss
 ADD goss.yml /tmp/goss.yml
 RUN goss --gossfile /tmp/goss.yml validate
+
+ENV COMPASS_ENABLED=false
+ENV COMPASS_FUNCTION_THRESHOLD=1000000
 
 # The final stage which is used to run the image.
 FROM base AS run

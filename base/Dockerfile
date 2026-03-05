@@ -2,7 +2,6 @@ ARG ALPINE_VERSION=3.21
 ARG PHP_VERSION=8.0
 
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} AS docconv
-FROM ghcr.io/skpr/compass-extension:v1.10.0-php${PHP_VERSION} AS compass
 
 FROM from_image AS base
 
@@ -78,11 +77,6 @@ RUN if [ "${PHP_VERSION}" != "8.5" ]; then \
 RUN export SKPRMAIL_VERSION=1.0.3 && \
     curl -sSL https://github.com/skpr/mail/releases/download/v${SKPRMAIL_VERSION}/skprmail_${SKPRMAIL_VERSION}_linux_${TARGETARCH} -o /usr/local/bin/skprmail && \
     chmod +rx /usr/local/bin/skprmail
-
-# https://github.com/skpr/compass
-ENV COMPASS_ENABLED=false
-COPY --from=compass /etc/php/conf.d/00_compass.ini /etc/php/conf.d/00_compass.ini
-COPY --from=compass /usr/lib/php/modules/compass.so /usr/lib/php/modules/compass.so
 
 # Built using an updated build approach in this fork: https://github.com/skpr/docconv
 COPY --from=docconv /usr/local/bin/docconv /usr/local/bin/docconv

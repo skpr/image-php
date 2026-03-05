@@ -5,3 +5,9 @@ command:
     stdout:
       not:
         contain-substring: "WARNING"
+
+  check-php-compass-extension:
+    exec: "php -m | grep -i compass"
+    exit-status: 0
+    stdout:
+      contain-substring: "compass"
