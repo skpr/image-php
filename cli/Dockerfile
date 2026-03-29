@@ -1,5 +1,4 @@
-ARG ALPINE_VERSION=3.21
-
+ARG ALPINE_VERSION
 FROM alpine:${ALPINE_VERSION} AS redis-cli
 
 RUN apk add redis
