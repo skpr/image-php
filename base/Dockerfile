@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=3.20
+ARG ALPINE_VERSION=3.21
 ARG PHP_VERSION=8.0
 
 FROM docker.io/skpr/docconv:alpine${ALPINE_VERSION} AS docconv
