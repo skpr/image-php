@@ -144,10 +144,13 @@ target "circleci-node-20" {
     NODE_VERSION = 20
   }
 
-  tags = [
+  tags = flatten([
     for r in REGISTRIES :
-    "${r}/skpr/php-circleci:${PHP_VERSION}-node20-${VERSION}-${STREAM}"
-  ]
+    [
+      "${r}/skpr/php-circleci:${PHP_VERSION}-${VERSION}-${STREAM}",
+      "${r}/skpr/php-circleci:${PHP_VERSION}-node20-${VERSION}-${STREAM}",
+    ]
+  ])
 }
 
 target "circleci-node-22" {
