@@ -20,14 +20,14 @@ COPY fpm/php-fpm.conf /etc/php/php-fpm.conf
 
 # Configuration which can be overriden.
 # See /etc/php/php-fpm.conf
-ENV PHP_FPM_PORT=9000 \
+ENV PHP_FPM_PORT=9002 \
     PHP_FPM_MAX_CHILDREN=20 \
     PHP_FPM_START_SERVERS=2 \
     PHP_FPM_MIN_SPARE_SERVERS=2 \
     PHP_FPM_MAX_SPARE_SERVERS=10 \
     PHP_FPM_MAX_REQUESTS=500
 
-EXPOSE 9000
+EXPOSE 9002
 
 # Configuration duplicated from the Nginx Dockerfile.
 RUN apk --update --no-cache add nginx
