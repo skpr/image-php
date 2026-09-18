@@ -1,10 +1,16 @@
 command:
   check-configuration:
-    exec: "mkdir /data/app && php-fpm --test"
+    exec: "mkdir -p /data/app && php-fpm --test"
     exit-status: 0
     stdout:
       not:
         contain-substring: "WARNING"
+
+  check-fpm-log-limit:
+    exec: "mkdir -p /data/app && php-fpm -tt 2>&1"
+    exit-status: 0
+    stdout:
+      contain-substring: "log_limit = 32768"
 
   check-php-compass-extension:
     exec: "php -m | grep -i compass"
