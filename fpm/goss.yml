@@ -17,3 +17,18 @@ command:
     exit-status: 0
     stdout:
       contain-substring: "compass"
+
+  check-php-compass-config-file:
+    exec: "php -i | grep compass.config_file"
+    exit-status: 0
+    stdout:
+      contain-substring: "/etc/compass/config.yml"
+
+file:
+  /etc/compass/config.yml:
+    exists: true
+    owner: skpr
+    group: skpr
+    contents:
+      - "function_threshold"
+      - "suspend"
